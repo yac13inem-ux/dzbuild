@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     // Support both title and name for backward compatibility
     const productName = title || name;
 
-    if (!productName || !price) {
+    if (!productName || price === undefined) {
       return NextResponse.json(
         { error: 'Title/Name and price are required' },
         { status: 400 }
@@ -135,26 +135,19 @@ export async function POST(request: NextRequest) {
         name: productName,
         name_ar: nameAr,
         name_fr: nameFr,
-        description,
+        description: description || descriptionAr || descriptionFr,
         description_ar: descriptionAr,
         description_fr: descriptionFr,
-        category: category || categoryId,
-        category_id: categoryId || category,
+        category_id: category || categoryId,
         price: parseFloat(price) || 0,
         old_price: oldPrice ? parseFloat(oldPrice) : null,
         unit: unit || 'piece',
         stock: stock || 0,
-        image_url: imageUrl,
+        image_url: imageUrl || (images && images[0]) || null,
         images: images,
         is_featured: isFeatured || false,
         is_active: isActive !== false,
         company_id: companyId,
-        // Supplier info
-        supplier_name,
-        supplier_phone,
-        supplier_email,
-        city,
-        wilaya,
         created_at: new Date().toISOString(),
       })
       .select()
