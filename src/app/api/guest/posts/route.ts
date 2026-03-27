@@ -7,6 +7,15 @@ function generateEditToken(): string {
   return randomBytes(32).toString('hex');
 }
 
+// Generate UUID v4
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 // GET - Fetch posts
 export async function GET(request: NextRequest) {
   try {
@@ -73,10 +82,12 @@ export async function POST(request: NextRequest) {
 
     // Generate unique edit token
     const editToken = generateEditToken();
+    const postId = generateUUID();
 
     const { data: post, error } = await supabase
       .from('guest_posts')
       .insert({
+        id: postId,
         name: name.trim(),
         title: title?.trim() || null,
         content: content.trim(),
