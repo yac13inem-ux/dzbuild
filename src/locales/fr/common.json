@@ -1,0 +1,302 @@
+{
+  "app": {
+    "name": "DzBuild",
+    "tagline": "L'Ambition de la Construction Algérienne",
+    "description": "L'Ambition de la Construction Algérienne"
+  },
+  "nav": {
+    "home": "Accueil",
+    "guide": "Guide de Construction",
+    "blueprints": "Plans & Dessins",
+    "craftsmen": "Annuaire des Artisans",
+    "companies": "Entreprises de Construction",
+    "offices": "Bureaux d'Études",
+    "problems": "Problèmes & Solutions",
+    "diy": "Tutoriels DIY",
+    "realestate": "Immobilier",
+    "consultations": "Consultations",
+    "ai": "Assistant IA",
+    "factories": "Usines & Matériaux",
+    "jobs": "Offres d'Emploi",
+    "courses": "Formations",
+    "comparisons": "Comparaisons",
+    "calculator": "Calculateur de Coûts",
+    "market": "Marché Ouvert",
+    "engineers": "Espace Ingénieurs",
+    "videos": "Bibliothèque Vidéo",
+    "prices": "Prix des Produits",
+    "request": "Demander un Artisan",
+    "reviews": "Avis & Évaluations",
+    "admin": "Tableau de Bord Admin"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "logout": "Déconnexion",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublié?",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "noAccount": "Vous n'avez pas de compte?",
+    "hasAccount": "Vous avez déjà un compte?",
+    "loginSuccess": "Connexion réussie",
+    "registerSuccess": "Inscription réussie",
+    "logoutSuccess": "Déconnexion réussie"
+  },
+  "roles": {
+    "title": "Choisissez Votre Rôle",
+    "subtitle": "Sélectionnez le rôle qui vous décrit le mieux",
+    "civil_engineer": "Ingénieur Civil",
+    "contractor": "Entrepreneur",
+    "engineering_office": "Bureau d'Études",
+    "craftsman": "Artisan",
+    "construction_company": "Entreprise de Construction",
+    "store_factory": "Magasin / Usine",
+    "normal_user": "Utilisateur Normal",
+    "admin": "Administrateur"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord",
+    "welcome": "Bon retour",
+    "overview": "Aperçu",
+    "statistics": "Statistiques",
+    "recentActivity": "Activité Récente",
+    "quickActions": "Actions Rapides",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "myPosts": "Mes Publications",
+    "myProducts": "Mes Produits",
+    "myServices": "Mes Services",
+    "myOrders": "Mes Commandes",
+    "myCourses": "Mes Formations",
+    "myJobs": "Mes Offres d'Emploi",
+    "messages": "Messages",
+    "notifications": "Notifications"
+  },
+  "admin": {
+    "title": "Tableau de Bord Admin",
+    "users": "Gestion des Utilisateurs",
+    "ads": "Publicités",
+    "banners": "Bannières Publicitaires",
+    "posts": "Gestion des Publications",
+    "marketplace": "Marché",
+    "approvals": "Approbations en Attente",
+    "courses": "Gestion des Formations",
+    "jobs": "Offres d'Emploi",
+    "prices": "Prix des Produits",
+    "analytics": "Analyses",
+    "aiKnowledge": "Base de Connaissances IA",
+    "settings": "Paramètres de la Plateforme"
+  },
+  "sections": {
+    "guide": {
+      "title": "Guide de Construction",
+      "subtitle": "Guide étape par étape des phases de construction",
+      "stages": "Phases de Construction",
+      "foundation": "Fondation",
+      "structure": "Structure",
+      "plumbing": "Plomberie",
+      "electrical": "Électricité",
+      "finishing": "Finitions"
+    },
+    "blueprints": {
+      "title": "Plans & Dessins",
+      "subtitle": "Bibliothèque de plans de construction et dessins techniques",
+      "residential": "Résidentiel",
+      "commercial": "Commercial",
+      "industrial": "Industriel",
+      "download": "Télécharger",
+      "preview": "Aperçu"
+    },
+    "craftsmen": {
+      "title": "Annuaire des Artisans",
+      "subtitle": "Trouvez des artisans qualifiés près de chez vous",
+      "search": "Rechercher des artisans...",
+      "filter": "Filtrer par spécialité",
+      "rating": "Évaluation",
+      "available": "Disponible",
+      "contact": "Contacter"
+    },
+    "companies": {
+      "title": "Entreprises de Construction",
+      "subtitle": "Annuaire des entreprises de construction",
+      "verified": "Vérifié",
+      "projects": "Projets",
+      "services": "Services"
+    },
+    "problems": {
+      "title": "Problèmes & Solutions",
+      "subtitle": "Posez des questions, obtenez des réponses d'experts",
+      "askQuestion": "Poser une Question",
+      "categories": "Catégories",
+      "solved": "Résolu",
+      "open": "Ouvert"
+    },
+    "diy": {
+      "title": "Tutoriels DIY",
+      "subtitle": "Apprenez les bases de la réparation et de l'entretien",
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé",
+      "duration": "Durée",
+      "materials": "Matériaux Nécessaires"
+    },
+    "realestate": {
+      "title": "Immobilier",
+      "subtitle": "Acheter, vendre et louer des biens",
+      "forSale": "À Vendre",
+      "forRent": "À Louer",
+      "price": "Prix",
+      "area": "Surface",
+      "bedrooms": "Chambres",
+      "bathrooms": "Salles de Bain"
+    },
+    "consultations": {
+      "title": "Consultations d'Ingénierie",
+      "subtitle": "Obtenez des conseils professionnels en ingénierie",
+      "bookConsultation": "Réserver une Consultation",
+      "pending": "En Attente",
+      "inProgress": "En Cours",
+      "completed": "Terminé"
+    },
+    "ai": {
+      "title": "Assistant IA",
+      "subtitle": "Votre expert en construction IA",
+      "placeholder": "Posez n'importe quelle question sur la construction...",
+      "send": "Envoyer",
+      "thinking": "Réflexion..."
+    },
+    "factories": {
+      "title": "Usines & Matériaux de Construction",
+      "subtitle": "Trouvez des fournisseurs et fabricants",
+      "categories": "Catégories de Matériaux",
+      "verified": "Fournisseur Vérifié",
+      "delivery": "Livraison Disponible"
+    },
+    "jobs": {
+      "title": "Offres d'Emploi",
+      "subtitle": "Trouvez votre prochaine opportunité de carrière",
+      "postJob": "Publier une Offre",
+      "apply": "Postuler",
+      "fullTime": "Temps Plein",
+      "partTime": "Temps Partiel",
+      "contract": "Contrat",
+      "freelance": "Freelance"
+    },
+    "courses": {
+      "title": "Formations Professionnelles",
+      "subtitle": "Développement professionnel pour ingénieurs et artisans",
+      "enroll": "S'inscrire",
+      "lessons": "Leçons",
+      "duration": "Durée",
+      "certificate": "Certificat Inclus"
+    },
+    "comparisons": {
+      "title": "Comparaisons",
+      "subtitle": "Comparez matériaux, équipements et solutions",
+      "compare": "Comparer",
+      "features": "Caractéristiques",
+      "price": "Prix",
+      "quality": "Qualité"
+    },
+    "calculator": {
+      "title": "Calculateur de Coûts",
+      "subtitle": "Estimez vos coûts de construction",
+      "area": "Surface Totale (m²)",
+      "floors": "Nombre d'Étages",
+      "quality": "Niveau de Qualité",
+      "calculate": "Calculer le Coût",
+      "result": "Coût Estimé"
+    },
+    "market": {
+      "title": "Marché Ouvert",
+      "subtitle": "Achetez et vendez services et matériaux de construction",
+      "sell": "Vendre",
+      "buy": "Acheter",
+      "services": "Services",
+      "materials": "Matériaux",
+      "tools": "Outils"
+    },
+    "engineers": {
+      "title": "Espace Ingénieurs",
+      "subtitle": "Communauté privée pour ingénieurs",
+      "discussions": "Discussions",
+      "resources": "Ressources",
+      "events": "Événements",
+      "networking": "Réseautage"
+    },
+    "videos": {
+      "title": "Bibliothèque Vidéo",
+      "subtitle": "Vidéos éducatives sur la construction",
+      "trending": "Tendances",
+      "recent": "Récentes",
+      "popular": "Populaires",
+      "watchLater": "À Regarder Plus Tard"
+    },
+    "prices": {
+      "title": "Prix des Produits",
+      "subtitle": "Prix des matériaux de construction mis à jour",
+      "cement": "Ciment",
+      "steel": "Acier",
+      "bricks": "Briques",
+      "sand": "Sable",
+      "gravel": "Gravier",
+      "lastUpdated": "Dernière Mise à Jour"
+    },
+    "request": {
+      "title": "Demander un Artisan",
+      "subtitle": "Trouvez l'artisan idéal pour votre projet",
+      "submit": "Soumettre la Demande",
+      "description": "Description du Projet",
+      "location": "Localisation",
+      "budget": "Budget",
+      "timeline": "Délai"
+    },
+    "reviews": {
+      "title": "Avis & Évaluations",
+      "subtitle": "Découvrez ce que disent les autres",
+      "writeReview": "Écrire un Avis",
+      "rating": "Évaluation",
+      "verified": "Achat Vérifié"
+    }
+  },
+  "common": {
+    "search": "Rechercher...",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "viewAll": "Voir Tout",
+    "viewMore": "Voir Plus",
+    "viewLess": "Voir Moins",
+    "loadMore": "Charger Plus",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "submit": "Soumettre",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "loading": "Chargement...",
+    "noResults": "Aucun résultat trouvé",
+    "error": "Une erreur s'est produite",
+    "success": "Opération réussie",
+    "language": "Langue",
+    "theme": "Thème",
+    "darkMode": "Mode Sombre",
+    "lightMode": "Mode Clair",
+    "currency": "DZD"
+  },
+  "footer": {
+    "about": "À Propos",
+    "contact": "Contact",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "faq": "FAQ",
+    "support": "Support",
+    "copyright": "© 2024 DzBuild. Tous droits réservés."
+  }
+}

@@ -1,0 +1,302 @@
+{
+  "app": {
+    "name": "DzBuild",
+    "tagline": "Algerian Construction Ambition",
+    "description": "Algerian Construction Ambition"
+  },
+  "nav": {
+    "home": "Home",
+    "guide": "Construction Guide",
+    "blueprints": "Plans & Blueprints",
+    "craftsmen": "Craftsmen Directory",
+    "companies": "Construction Companies",
+    "offices": "Engineering Offices",
+    "problems": "Problems & Solutions",
+    "diy": "DIY Tutorials",
+    "realestate": "Real Estate",
+    "consultations": "Consultations",
+    "ai": "AI Assistant",
+    "factories": "Factories & Materials",
+    "jobs": "Job Opportunities",
+    "courses": "Training Courses",
+    "comparisons": "Comparisons",
+    "calculator": "Cost Calculator",
+    "market": "Open Market",
+    "engineers": "Engineers Space",
+    "videos": "Video Library",
+    "prices": "Product Prices",
+    "request": "Request Craftsman",
+    "reviews": "Reviews & Ratings",
+    "admin": "Admin Dashboard"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginSuccess": "Login successful",
+    "registerSuccess": "Registration successful",
+    "logoutSuccess": "Logged out successfully"
+  },
+  "roles": {
+    "title": "Choose Your Role",
+    "subtitle": "Select the role that best describes you",
+    "civil_engineer": "Civil Engineer",
+    "contractor": "Contractor",
+    "engineering_office": "Engineering Office",
+    "craftsman": "Craftsman",
+    "construction_company": "Construction Company",
+    "store_factory": "Store / Factory",
+    "normal_user": "Normal User",
+    "admin": "Administrator"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "overview": "Overview",
+    "statistics": "Statistics",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions",
+    "profile": "Profile",
+    "settings": "Settings",
+    "myPosts": "My Posts",
+    "myProducts": "My Products",
+    "myServices": "My Services",
+    "myOrders": "My Orders",
+    "myCourses": "My Courses",
+    "myJobs": "My Job Listings",
+    "messages": "Messages",
+    "notifications": "Notifications"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "users": "Users Management",
+    "ads": "Advertisements",
+    "banners": "Ad Banners",
+    "posts": "Posts Management",
+    "marketplace": "Marketplace",
+    "approvals": "Pending Approvals",
+    "courses": "Courses Management",
+    "jobs": "Job Offers",
+    "prices": "Product Prices",
+    "analytics": "Analytics",
+    "aiKnowledge": "AI Knowledge Base",
+    "settings": "Platform Settings"
+  },
+  "sections": {
+    "guide": {
+      "title": "Construction Guide",
+      "subtitle": "Step-by-step guide for construction stages",
+      "stages": "Construction Stages",
+      "foundation": "Foundation",
+      "structure": "Structure",
+      "plumbing": "Plumbing",
+      "electrical": "Electrical",
+      "finishing": "Finishing"
+    },
+    "blueprints": {
+      "title": "Plans & Blueprints",
+      "subtitle": "Library of construction plans and technical drawings",
+      "residential": "Residential",
+      "commercial": "Commercial",
+      "industrial": "Industrial",
+      "download": "Download",
+      "preview": "Preview"
+    },
+    "craftsmen": {
+      "title": "Craftsmen Directory",
+      "subtitle": "Find skilled craftsmen near you",
+      "search": "Search craftsmen...",
+      "filter": "Filter by specialty",
+      "rating": "Rating",
+      "available": "Available",
+      "contact": "Contact"
+    },
+    "companies": {
+      "title": "Construction Companies",
+      "subtitle": "Directory of construction companies",
+      "verified": "Verified",
+      "projects": "Projects",
+      "services": "Services"
+    },
+    "problems": {
+      "title": "Problems & Solutions",
+      "subtitle": "Ask questions, get expert answers",
+      "askQuestion": "Ask a Question",
+      "categories": "Categories",
+      "solved": "Solved",
+      "open": "Open"
+    },
+    "diy": {
+      "title": "DIY Tutorials",
+      "subtitle": "Learn basic repair and maintenance",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "duration": "Duration",
+      "materials": "Materials Needed"
+    },
+    "realestate": {
+      "title": "Real Estate",
+      "subtitle": "Buy, sell, and rent properties",
+      "forSale": "For Sale",
+      "forRent": "For Rent",
+      "price": "Price",
+      "area": "Area",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms"
+    },
+    "consultations": {
+      "title": "Engineering Consultations",
+      "subtitle": "Get professional engineering advice",
+      "bookConsultation": "Book Consultation",
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "ai": {
+      "title": "AI Assistant",
+      "subtitle": "Your construction AI expert",
+      "placeholder": "Ask any construction question...",
+      "send": "Send",
+      "thinking": "Thinking..."
+    },
+    "factories": {
+      "title": "Factories & Building Materials",
+      "subtitle": "Find suppliers and manufacturers",
+      "categories": "Material Categories",
+      "verified": "Verified Supplier",
+      "delivery": "Delivery Available"
+    },
+    "jobs": {
+      "title": "Job Opportunities",
+      "subtitle": "Find your next career opportunity",
+      "postJob": "Post a Job",
+      "apply": "Apply Now",
+      "fullTime": "Full Time",
+      "partTime": "Part Time",
+      "contract": "Contract",
+      "freelance": "Freelance"
+    },
+    "courses": {
+      "title": "Training Courses",
+      "subtitle": "Professional development for engineers and craftsmen",
+      "enroll": "Enroll Now",
+      "lessons": "Lessons",
+      "duration": "Duration",
+      "certificate": "Certificate Included"
+    },
+    "comparisons": {
+      "title": "Comparisons",
+      "subtitle": "Compare materials, equipment, and solutions",
+      "compare": "Compare",
+      "features": "Features",
+      "price": "Price",
+      "quality": "Quality"
+    },
+    "calculator": {
+      "title": "Cost Calculator",
+      "subtitle": "Estimate your construction costs",
+      "area": "Total Area (m²)",
+      "floors": "Number of Floors",
+      "quality": "Quality Level",
+      "calculate": "Calculate Cost",
+      "result": "Estimated Cost"
+    },
+    "market": {
+      "title": "Open Market",
+      "subtitle": "Buy and sell construction services and materials",
+      "sell": "Sell Item",
+      "buy": "Buy",
+      "services": "Services",
+      "materials": "Materials",
+      "tools": "Tools"
+    },
+    "engineers": {
+      "title": "Engineers Only Space",
+      "subtitle": "Private community for engineers",
+      "discussions": "Discussions",
+      "resources": "Resources",
+      "events": "Events",
+      "networking": "Networking"
+    },
+    "videos": {
+      "title": "Video Library",
+      "subtitle": "Educational construction videos",
+      "trending": "Trending",
+      "recent": "Recent",
+      "popular": "Popular",
+      "watchLater": "Watch Later"
+    },
+    "prices": {
+      "title": "Product Prices",
+      "subtitle": "Updated building materials prices",
+      "cement": "Cement",
+      "steel": "Steel",
+      "bricks": "Bricks",
+      "sand": "Sand",
+      "gravel": "Gravel",
+      "lastUpdated": "Last Updated"
+    },
+    "request": {
+      "title": "Request Craftsman",
+      "subtitle": "Find the right craftsman for your project",
+      "submit": "Submit Request",
+      "description": "Project Description",
+      "location": "Location",
+      "budget": "Budget",
+      "timeline": "Timeline"
+    },
+    "reviews": {
+      "title": "Reviews & Ratings",
+      "subtitle": "See what others are saying",
+      "writeReview": "Write a Review",
+      "rating": "Rating",
+      "verified": "Verified Purchase"
+    }
+  },
+  "common": {
+    "search": "Search...",
+    "filter": "Filter",
+    "sort": "Sort",
+    "viewAll": "View All",
+    "viewMore": "View More",
+    "viewLess": "View Less",
+    "loadMore": "Load More",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "error": "An error occurred",
+    "success": "Operation successful",
+    "language": "Language",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "currency": "DZD"
+  },
+  "footer": {
+    "about": "About Us",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "faq": "FAQ",
+    "support": "Support",
+    "copyright": "© 2024 DzBuild. All rights reserved."
+  }
+}
