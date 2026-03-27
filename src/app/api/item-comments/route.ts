@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       .from('comments')
       .select('*')
       .eq('post_id', `${itemType}_${itemId}`)
-      .eq('approved', true)
+      .eq('is_approved', true)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -53,9 +53,9 @@ export async function POST(request: NextRequest) {
       .insert({
         id,
         post_id: `${item_type}_${item_id}`,
-        name,
+        author_name: name,
         content,
-        approved: true,
+        is_approved: true,
         like_count: 0,
         created_at: new Date().toISOString(),
       })

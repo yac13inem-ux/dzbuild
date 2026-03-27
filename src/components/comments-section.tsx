@@ -12,7 +12,7 @@ import { MessageCircle, Send, Trash2, Loader2, Clock } from 'lucide-react';
 
 interface Comment {
   id: string;
-  name: string;
+  author_name: string;
   content: string;
   like_count: number;
   created_at: string;
@@ -184,12 +184,12 @@ export function CommentsSection({ itemType, itemId }: CommentsSectionProps) {
             >
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-primary/20 text-primary text-xs">
-                  {getInitials(comment.name)}
+                  {getInitials(comment.author_name)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-medium text-sm">{comment.name}</span>
+                  <span className="font-medium text-sm">{comment.author_name}</span>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                       <Clock className="h-3 w-3" />
