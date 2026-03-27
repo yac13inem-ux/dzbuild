@@ -29,7 +29,9 @@ import {
   Globe,
   Calendar,
   Users,
+  Plus,
 } from 'lucide-react';
+import { AddItemDialog } from '@/components/add-item-dialog';
 
 interface CompaniesSectionProps {
   onBack?: () => void;
@@ -115,6 +117,7 @@ export function CompaniesSection({ onBack }: CompaniesSectionProps) {
   const [selectedWilaya, setSelectedWilaya] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   // Fetch companies
   useEffect(() => {
@@ -435,6 +438,10 @@ export function CompaniesSection({ onBack }: CompaniesSectionProps) {
             {translations.home[locale]}
           </Button>
         )}
+        <Button className="gap-2 ml-auto" onClick={() => setShowAddDialog(true)}>
+          <Plus className="h-4 w-4" />
+          {isRTL ? 'إضافة شركة' : 'Ajouter'}
+        </Button>
       </div>
 
       {/* Category Header */}
@@ -549,6 +556,16 @@ export function CompaniesSection({ onBack }: CompaniesSectionProps) {
           })}
         </div>
       )}
+
+      {/* Add Company Dialog */}
+      <AddItemDialog
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        type="company"
+        onSuccess={() => {
+          fetchCompanies();
+        }}
+      />
     </div>
   );
 }

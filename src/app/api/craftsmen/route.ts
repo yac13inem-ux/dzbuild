@@ -116,3 +116,77 @@ export async function GET(request: NextRequest) {
     });
   }
 }
+
+// POST - Register a new craftsman
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const {
+      name,
+      category,
+      specialty,
+      specializations,
+      city,
+      wilaya,
+      phone,
+      email,
+      experience_years,
+      experience,
+      bio,
+      description,
+      images,
+      hourly_rate,
+      daily_rate,
+      is_available,
+    } = body;
+
+    if (!name || !category) {
+      return NextResponse.json(
+        { error: 'Name and category are required' },
+        { status: 400 }
+      );
+    }
+
+    // Generate a unique ID
+    const id = `craft-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+
+    const { data: craftsman, error } = await supabase
+      .from('craftsmen')
+      .insert({
+        id,
+        name,
+        category,
+        specialty: specialty || specializations?.[0],
+        specializations: specializations || (specialty ? [specialty] : []),
+        city,
+        wilaya,
+        phone,
+        email,
+        experience: experience_years || experience || 0,
+        description: bio || description,
+        images,
+        hourly_rate,
+        daily_rate,
+        is_available: is_available !== false,
+        is_active: true,
+        verified: false,
+        rating: 0,
+        review_count: 0,
+        created_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Create craftsman error:', error);
+      return NextResponse.json({ 
+        error: 'Failed to register craftsman: ' + error.message 
+      }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, craftsman });
+  } catch (error) {
+    console.error('Create craftsman error:', error);
+    return NextResponse.json({ error: 'Failed to register craftsman' }, { status: 500 });
+  }
+}

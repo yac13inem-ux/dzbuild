@@ -117,3 +117,81 @@ export async function GET(request: NextRequest) {
     });
   }
 }
+
+// POST - Add a new company
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const {
+      name,
+      name_fr,
+      company_type,
+      type,
+      description,
+      description_fr,
+      email,
+      phone,
+      website,
+      city,
+      wilaya,
+      address,
+      logo,
+      cover_image,
+      specialties,
+      services,
+      founded_year,
+    } = body;
+
+    if (!name || !company_type) {
+      return NextResponse.json(
+        { error: 'Name and company_type are required' },
+        { status: 400 }
+      );
+    }
+
+    // Generate a unique ID
+    const id = `comp-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+
+    const { data: company, error } = await supabase
+      .from('companies')
+      .insert({
+        id,
+        name,
+        name_fr,
+        type: company_type || type,
+        description,
+        description_fr,
+        email,
+        phone,
+        website,
+        city,
+        wilaya,
+        address,
+        logo,
+        cover_image,
+        specialties: specialties || [],
+        services: services || [],
+        founded_year,
+        is_active: true,
+        is_verified: false,
+        is_featured: false,
+        rating: 0,
+        review_count: 0,
+        created_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Create company error:', error);
+      return NextResponse.json({ 
+        error: 'Failed to add company: ' + error.message 
+      }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, company });
+  } catch (error) {
+    console.error('Create company error:', error);
+    return NextResponse.json({ error: 'Failed to add company' }, { status: 500 });
+  }
+}

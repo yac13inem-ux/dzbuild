@@ -30,6 +30,7 @@ import {
   RefreshCw,
   ChevronLeft,
 } from 'lucide-react';
+import { AddItemDialog } from '@/components/add-item-dialog';
 
 interface ProjectsSectionProps {
   onBack?: () => void;
@@ -139,6 +140,7 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   useEffect(() => {
     if (selectedCategory !== null) {
@@ -279,6 +281,10 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
               {translations.home[locale]}
             </Button>
           )}
+          <Button className="gap-2 ml-auto" onClick={() => setShowAddDialog(true)}>
+            <Plus className="h-4 w-4" />
+            {isRTL ? 'إضافة مشروع' : 'Ajouter'}
+          </Button>
         </div>
 
         {/* Category Header */}
@@ -392,6 +398,16 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
             })}
           </div>
         )}
+
+        {/* Add Project Dialog */}
+        <AddItemDialog
+          open={showAddDialog}
+          onOpenChange={setShowAddDialog}
+          type="project"
+          onSuccess={() => {
+            fetchProjects();
+          }}
+        />
       </div>
     );
   }

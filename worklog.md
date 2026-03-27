@@ -311,3 +311,35 @@ Stage Summary:
 - الأقسام المدعومة: سكني، تجاري، صناعي، بنية تحتية، عام، ترميم
 - المشاريع تُحفظ بقسمها وتظهر في الواجهة الأمامية حسب القسم
 - تم ربط لوحة التحكم مع الواجهة الأمامية عبر حقل category
+
+---
+Task ID: 15
+Agent: API Developer Agent
+Task: إنشاء وتحديث API routes للسماح للمستخدمين بإضافة محتوى
+
+Work Log:
+- تحديث API المنتجات (/api/products/route.ts):
+  - إضافة حقول المورد: supplier_name, supplier_phone, supplier_email
+  - إضافة حقول الموقع: city, wilaya
+  - دعم حقل `title` بالإضافة إلى `name`
+  - إضافة `created_at` تلقائياً
+- إنشاء API تسجيل الحرفيين (/api/craftsmen/route.ts):
+  - إضافة دالة POST لتسجيل حرفي جديد
+  - الحقول: name, category, specialty, city, wilaya, phone, email, experience_years, bio, images
+  - إنشاء ID فريد بصيغة `craft-{timestamp}-{random}`
+- إنشاء API إضافة الشركات (/api/companies/route.ts):
+  - إضافة دالة POST لإضافة شركة
+  - الحقول: name, company_type, description, email, phone, website, city, wilaya
+  - إنشاء ID فريد بصيغة `comp-{timestamp}-{random}`
+- التحقق من API الوظائف (/api/jobs/route.ts):
+  - POST موجود ويدعم جميع الحقول المطلوبة
+  - الحقول: title, description, category, company_name, city, wilaya, salary_range, experience_level, contact_email, contact_phone, deadline
+- التحقق من API المشاريع (/api/projects/route.ts):
+  - POST موجود ويدعم جميع الحقول المطلوبة
+  - الحقول: title, description, category, status, progress, budget, location, wilaya, start_date, end_date
+
+Stage Summary:
+- تم تحديث جميع APIs المطلوبة لتدعم إضافة المحتوى
+- جميع الملفات تمر فحص ESLint بدون أخطاء
+- IDs فريدة تُنشأ بصيغة `{type}-{timestamp}-{random}`
+- جميع الـ inserts تتضمن `created_at` تلقائياً

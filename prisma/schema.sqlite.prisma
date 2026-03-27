@@ -1,0 +1,758 @@
+// DzBuild - Local Development Schema for SQLite
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db/custom.db"
+}
+
+// ==================== USER MANAGEMENT ====================
+
+model User {
+  id                String  @id @default(cuid())
+  email             String  @unique
+  password          String
+  name              String
+  phone             String?
+  avatar            String?
+  role              String  @default("NORMAL_USER")
+  verificationStatus String @default("PENDING")
+  isVerified        Boolean @default(false)
+  isActive          Boolean @default(true)
+  isEmailVerified   Boolean @default(false)
+  
+  // Profile fields
+  bio               String?
+  address           String?
+  city              String?
+  wilaya            String?
+  latitude          Float?
+  longitude         Float?
+  website           String?
+  socialLinks       String?
+  
+  // Role-specific fields
+  specialization    String?
+  experience        Int?
+  licenseNumber     String?
+  certifications    String?
+  
+  // Statistics
+  rating            Float   @default(0)
+  reviewCount       Int     @default(0)
+  projectCount      Int     @default(0)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  accounts          Account[]
+  sessions          Session[]
+  posts             Post[]
+  comments          Comment[]
+  reviews           Review[]
+  services          Service[]
+  products          Product[]
+  jobListings       JobListing[]
+  courses           Course[]
+  enrollments       CourseEnrollment[]
+  problems          Problem[]
+  solutions         Solution[]
+  notifications     Notification[]
+  favorites         Favorite[]
+  messages          Message[]  @relation("MessageSender")
+  receivedMessages  Message[]  @relation("MessageReceiver")
+  companyEmployees  CompanyEmployee[]
+  
+  @@map("users")
+}
+
+// NextAuth Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ==================== CONTENT MANAGEMENT ====================
+
+model Post {
+  id              String    @id @default(cuid())
+  title           String?
+  content         String?
+  images          String?
+  videos          String?
+  category        String?
+  tags            String?
+  isPublished     Boolean   @default(true)
+  isFeatured      Boolean   @default(false)
+  isSponsored     Boolean   @default(false)
+  viewCount       Int       @default(0)
+  likeCount       Int       @default(0)
+  commentCount    Int       @default(0)
+  authorId        String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments        Comment[]
+  
+  @@index([authorId])
+  @@index([category])
+  @@map("posts")
+}
+
+model Comment {
+  id              String    @id @default(cuid())
+  content         String
+  authorId        String
+  postId          String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post            Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@index([authorId])
+  @@index([postId])
+  @@map("comments")
+}
+
+// ==================== COMPANIES ====================
+
+model Company {
+  id              String    @id @default(cuid())
+  name            String
+  nameAr          String?
+  nameFr          String?
+  type            String
+  description     String?
+  descriptionAr   String?
+  descriptionFr   String?
+  logo            String?
+  coverImage      String?
+  address         String?
+  city            String?
+  wilaya          String?
+  latitude        Float?
+  longitude       Float?
+  phone           String?
+  email           String?
+  website         String?
+  socialLinks     String?
+  services        String?
+  portfolio       String?
+  certificates    String?
+  licenseNumber   String?
+  taxId           String?
+  employeeCount   Int?
+  foundedYear     Int?
+  specialties     String?
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
+  projectCount    Int       @default(0)
+  isVerified      Boolean   @default(false)
+  isFeatured      Boolean   @default(false)
+  isActive        Boolean   @default(true)
+  owner           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  employees       CompanyEmployee[]
+  jobListings     JobListing[]
+  
+  @@index([type])
+  @@index([wilaya])
+  @@index([city])
+  @@map("companies")
+}
+
+model CompanyEmployee {
+  id              String    @id @default(cuid())
+  userId          String
+  companyId       String
+  role            String
+  position        String?
+  department      String?
+  isVerified      Boolean   @default(false)
+  joinedAt        DateTime  @default(now())
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company         Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([companyId])
+  @@map("company_employees")
+}
+
+// ==================== CRAFTSMEN ====================
+
+model Craftsman {
+  id              String    @id @default(cuid())
+  name            String
+  category        String
+  specialty       String?
+  city            String?
+  wilaya          String?
+  phone           String?
+  phone2          String?
+  email           String?
+  experienceYears Int?
+  bio             String?
+  images          String?
+  avatar          String?
+  isVerified      Boolean   @default(false)
+  isAvailable     Boolean   @default(true)
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
+  viewsCount      Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("craftsmen")
+}
+
+// ==================== PRODUCTS ====================
+
+model Product {
+  id              String    @id @default(cuid())
+  title           String
+  description     String?
+  category        String
+  price           Float
+  unit            String?
+  quantityAvailable Int?
+  supplierName    String?
+  supplierPhone   String?
+  supplierEmail   String?
+  wilaya          String?
+  city            String?
+  images          String?
+  isFeatured      Boolean   @default(false)
+  viewsCount      Int       @default(0)
+  inquiriesCount  Int       @default(0)
+  sellerId        String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  seller          User?     @relation(fields: [sellerId], references: [id], onDelete: SetNull)
+  
+  @@map("products")
+}
+
+// ==================== JOBS ====================
+
+model Job {
+  id              String    @id @default(cuid())
+  title           String
+  description     String?
+  category        String
+  companyName     String
+  companyLogo     String?
+  wilaya          String?
+  city            String?
+  experienceLevel String?
+  experienceRequired String?
+  salaryRange     String?
+  jobType         String?
+  applicationMethod String?
+  contactEmail    String?
+  contactPhone    String?
+  deadline        DateTime?
+  requirements    String?
+  benefits        String?
+  isFeatured      Boolean   @default(false)
+  viewsCount      Int       @default(0)
+  applicationsCount Int     @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("jobs")
+}
+
+model JobListing {
+  id              String    @id @default(cuid())
+  title           String
+  titleAr         String?
+  titleFr         String?
+  description     String
+  descriptionAr   String?
+  descriptionFr   String?
+  requirements    String?
+  responsibilities String?
+  benefits        String?
+  jobType         String
+  category        String?
+  experienceLevel String?
+  experienceYears String?
+  salaryMin       Float?
+  salaryMax       Float?
+  salaryType      String?
+  currency        String    @default("DZD")
+  location        String?
+  city            String?
+  wilaya          String?
+  isRemote        Boolean   @default(false)
+  isHybrid        Boolean   @default(false)
+  vacancies       Int       @default(1)
+  applications    Int       @default(0)
+  deadline        DateTime?
+  status          String    @default("active")
+  isFeatured      Boolean   @default(false)
+  isUrgent        Boolean   @default(false)
+  postedById      String
+  companyId       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  postedBy        User      @relation(fields: [postedById], references: [id], onDelete: Cascade)
+  company         Company?  @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  
+  @@index([postedById])
+  @@index([companyId])
+  @@index([category])
+  @@index([wilaya])
+  @@map("job_listings")
+}
+
+// ==================== QUESTIONS ====================
+
+model Question {
+  id              String    @id @default(cuid())
+  title           String
+  content         String?
+  category        String
+  images          String?
+  authorName      String?
+  authorRole      String?
+  answersCount    Int       @default(0)
+  votesCount      Int       @default(0)
+  viewsCount      Int       @default(0)
+  isSolved        Boolean   @default(false)
+  isPinned        Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("questions")
+}
+
+// ==================== LIBRARY ====================
+
+model LibraryResource {
+  id              String    @id @default(cuid())
+  title           String
+  titleAr         String?
+  titleFr         String?
+  description     String?
+  category        String
+  fileUrl         String?
+  fileName        String?
+  fileSize        Int?
+  thumbnail       String?
+  videoUrl        String?
+  readTime        Int?
+  downloadCount   Int       @default(0)
+  likeCount       Int       @default(0)
+  viewCount       Int       @default(0)
+  isFeatured      Boolean   @default(false)
+  tags            String?
+  author          String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("library_resources")
+}
+
+// ==================== PROJECTS ====================
+
+model Project {
+  id              String    @id @default(cuid())
+  title           String
+  titleAr         String?
+  titleFr         String?
+  description     String?
+  descriptionAr   String?
+  descriptionFr   String?
+  status          String    @default("planning")
+  category        String    @default("other")
+  progress        Int       @default(0)
+  location        String?
+  city            String?
+  wilaya          String?
+  budget          Float?
+  startDate       DateTime?
+  endDate         DateTime?
+  images          String?
+  clientName      String?
+  clientPhone     String?
+  clientEmail     String?
+  managerId       String?
+  isFeatured      Boolean   @default(false)
+  isPublished     Boolean   @default(true)
+  viewCount       Int       @default(0)
+  createdById     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([category])
+  @@index([status])
+  @@index([wilaya])
+  @@map("projects")
+}
+
+// ==================== SERVICES ====================
+
+model Service {
+  id              String    @id @default(cuid())
+  title           String
+  titleAr         String?
+  titleFr         String?
+  description     String?
+  descriptionAr   String?
+  descriptionFr   String?
+  category        String?
+  images          String?
+  price           Float?
+  priceType       String    @default("fixed")
+  duration        Int?
+  providerId      String
+  location        String?
+  city            String?
+  wilaya          String?
+  availability    String?
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
+  orderCount      Int       @default(0)
+  isActive        Boolean   @default(true)
+  isFeatured      Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  provider        User      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  
+  @@index([providerId])
+  @@index([category])
+  @@map("services")
+}
+
+// ==================== COURSES ====================
+
+model Course {
+  id              String    @id @default(cuid())
+  title           String
+  titleAr         String?
+  titleFr         String?
+  description     String?
+  descriptionAr   String?
+  descriptionFr   String?
+  thumbnail       String?
+  category        String?
+  level           String    @default("beginner")
+  duration        Int?
+  lessons         Int?
+  price           Float     @default(0)
+  oldPrice        Float?
+  isFree          Boolean   @default(false)
+  certificate     Boolean   @default(false)
+  instructorId    String
+  syllabus        String?
+  requirements    String?
+  outcomes        String?
+  language        String    @default("arabic")
+  rating          Float     @default(0)
+  reviewCount     Int       @default(0)
+  enrollmentCount Int       @default(0)
+  isPublished     Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  instructor      User      @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  enrollments     CourseEnrollment[]
+  videos          CourseVideo[]
+  
+  @@index([instructorId])
+  @@index([category])
+  @@map("courses")
+}
+
+model CourseVideo {
+  id              String    @id @default(cuid())
+  courseId        String
+  title           String
+  titleAr         String?
+  titleFr         String?
+  description     String?
+  videoUrl        String
+  thumbnail       String?
+  duration        Int?
+  order           Int       @default(0)
+  isPreview       Boolean   @default(false)
+  viewCount       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  
+  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@index([courseId])
+  @@map("course_videos")
+}
+
+model CourseEnrollment {
+  id              String    @id @default(cuid())
+  userId          String
+  courseId        String
+  progress        Int       @default(0)
+  completedLessons String?
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  certificateUrl  String?
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([courseId])
+  @@map("course_enrollments")
+}
+
+// ==================== PROBLEMS & SOLUTIONS ====================
+
+model Problem {
+  id              String    @id @default(cuid())
+  title           String
+  description     String
+  images          String?
+  category        String?
+  status          String    @default("open")
+  priority        String    @default("normal")
+  viewCount       Int       @default(0)
+  upvoteCount     Int       @default(0)
+  authorId        String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  solutions       Solution[]
+  
+  @@index([authorId])
+  @@index([category])
+  @@map("problems")
+}
+
+model Solution {
+  id              String    @id @default(cuid())
+  content         String
+  images          String?
+  isAccepted      Boolean   @default(false)
+  upvoteCount     Int       @default(0)
+  authorId        String
+  problemId       String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  problem         Problem   @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  
+  @@index([authorId])
+  @@index([problemId])
+  @@map("solutions")
+}
+
+// ==================== REVIEWS ====================
+
+model Review {
+  id              String    @id @default(cuid())
+  rating          Int
+  comment         String?
+  images          String?
+  authorId        String
+  targetType      String
+  targetId        String
+  isVerified      Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  @@index([authorId])
+  @@index([targetType, targetId])
+  @@map("reviews")
+}
+
+// ==================== NOTIFICATIONS ====================
+
+model Notification {
+  id              String    @id @default(cuid())
+  userId          String
+  type            String
+  title           String
+  content         String
+  data            String?
+  isRead          Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+// ==================== MESSAGES ====================
+
+model Message {
+  id              String    @id @default(cuid())
+  senderId        String
+  receiverId      String
+  content         String
+  attachments     String?
+  isRead          Boolean   @default(false)
+  readAt          DateTime?
+  createdAt       DateTime  @default(now())
+  
+  sender          User      @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver        User      @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  
+  @@index([senderId])
+  @@index([receiverId])
+  @@map("messages")
+}
+
+// ==================== FAVORITES ====================
+
+model Favorite {
+  id              String    @id @default(cuid())
+  userId          String
+  targetType      String
+  targetId        String
+  createdAt       DateTime  @default(now())
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, targetType, targetId])
+  @@index([userId])
+  @@map("favorites")
+}
+
+// ==================== ADVERTISEMENTS ====================
+
+model Advertisement {
+  id              String    @id @default(cuid())
+  title           String
+  type            String
+  position        String?
+  imageUrl        String?
+  videoUrl        String?
+  linkUrl         String?
+  content         String?
+  targetAudience  String?
+  startDate       DateTime
+  endDate         DateTime
+  budget          Float?
+  spent           Float     @default(0)
+  impressions     Int       @default(0)
+  clicks          Int       @default(0)
+  status          String    @default("pending")
+  advertiserId    String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([status])
+  @@index([position])
+  @@map("advertisements")
+}
+
+// ==================== SETTINGS ====================
+
+model Setting {
+  id              String    @id @default(cuid())
+  key             String    @unique
+  value           String
+  description     String?
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("settings")
+}
+
+// ==================== ADDITIONAL MODELS ====================
+
+model ConstructionGuide {
+  id              String    @id @default(cuid())
+  title           String
+  titleAr         String?
+  titleFr         String?
+  content         String
+  contentAr       String?
+  contentFr       String?
+  category        String
+  order           Int       @default(0)
+  images          String?
+  videos          String?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([category])
+  @@map("construction_guides")
+}
+
+model Video {
+  id              String    @id @default(cuid())
+  title           String
+  titleAr         String?
+  titleFr         String?
+  description     String?
+  descriptionAr   String?
+  descriptionFr   String?
+  thumbnail       String?
+  videoUrl        String
+  source          String    @default("youtube")
+  category        String
+  duration        Int?
+  viewCount       Int       @default(0)
+  likeCount       Int       @default(0)
+  tags            String?
+  isFeatured      Boolean   @default(false)
+  isPublished     Boolean   @default(true)
+  author          String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([category])
+  @@map("videos")
+}

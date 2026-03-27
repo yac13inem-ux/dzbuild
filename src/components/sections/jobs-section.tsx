@@ -38,7 +38,9 @@ import {
   Award,
   DollarSign,
   Sparkles,
+  Plus,
 } from 'lucide-react';
+import { AddItemDialog } from '@/components/add-item-dialog';
 
 // Job categories with icons and gradients
 const JOB_CATEGORIES = [
@@ -180,6 +182,7 @@ export function JobsSection({ onBack }: JobsSectionProps) {
   const [selectedExperience, setSelectedExperience] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   // Fetch jobs
   useEffect(() => {
@@ -566,12 +569,18 @@ export function JobsSection({ onBack }: JobsSectionProps) {
             {locale === 'ar' ? 'منصة توظيف للمهندسين والعمال' : 'Plateforme de recrutement pour ingénieurs et ouvriers'}
           </p>
         </div>
-        {onBack && (
-          <Button variant="default" onClick={onBack} className="gap-2 shadow-lg shadow-primary/20">
-            <Home className="h-4 w-4" />
-            {translations.home[locale]}
+        <div className="flex gap-2">
+          {onBack && (
+            <Button variant="default" onClick={onBack} className="gap-2 shadow-lg shadow-primary/20">
+              <Home className="h-4 w-4" />
+              {translations.home[locale]}
+            </Button>
+          )}
+          <Button className="gap-2" onClick={() => setShowAddDialog(true)}>
+            <Plus className="h-4 w-4" />
+            {isRTL ? 'نشر وظيفة' : 'Publier'}
           </Button>
-        )}
+        </div>
       </div>
 
       {/* Job Categories - Beautiful Circles */}
@@ -753,6 +762,16 @@ export function JobsSection({ onBack }: JobsSectionProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* Add Job Dialog */}
+      <AddItemDialog
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        type="job"
+        onSuccess={() => {
+          fetchJobs();
+        }}
+      />
     </div>
   );
 }

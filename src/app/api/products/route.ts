@@ -89,6 +89,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const {
+      title,
       name,
       nameAr,
       nameFr,
@@ -106,11 +107,20 @@ export async function POST(request: NextRequest) {
       isFeatured,
       isActive,
       companyId,
+      // Supplier fields
+      supplier_name,
+      supplier_phone,
+      supplier_email,
+      city,
+      wilaya,
     } = body;
 
-    if (!name || !price) {
+    // Support both title and name for backward compatibility
+    const productName = title || name;
+
+    if (!productName || !price) {
       return NextResponse.json(
-        { error: 'Name and price are required' },
+        { error: 'Title/Name and price are required' },
         { status: 400 }
       );
     }
@@ -122,12 +132,13 @@ export async function POST(request: NextRequest) {
       .from('products')
       .insert({
         id,
-        name,
+        name: productName,
         name_ar: nameAr,
         name_fr: nameFr,
         description,
         description_ar: descriptionAr,
         description_fr: descriptionFr,
+        category: category || categoryId,
         category_id: categoryId || category,
         price: parseFloat(price) || 0,
         old_price: oldPrice ? parseFloat(oldPrice) : null,
@@ -138,6 +149,13 @@ export async function POST(request: NextRequest) {
         is_featured: isFeatured || false,
         is_active: isActive !== false,
         company_id: companyId,
+        // Supplier info
+        supplier_name,
+        supplier_phone,
+        supplier_email,
+        city,
+        wilaya,
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();

@@ -27,7 +27,9 @@ import {
   Zap,
   Droplets,
   Award,
+  Plus,
 } from 'lucide-react';
+import { AddItemDialog } from '@/components/add-item-dialog';
 
 interface MarketSectionProps {
   onBack?: () => void;
@@ -117,6 +119,7 @@ export function MarketSection({ onBack }: MarketSectionProps) {
   const [selectedWilaya, setSelectedWilaya] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   // Fetch products
   useEffect(() => {
@@ -416,6 +419,10 @@ export function MarketSection({ onBack }: MarketSectionProps) {
             {translations.home[locale]}
           </Button>
         )}
+        <Button className="gap-2 ml-auto" onClick={() => setShowAddDialog(true)}>
+          <Plus className="h-4 w-4" />
+          {isRTL ? 'إضافة منتج' : 'Ajouter'}
+        </Button>
       </div>
 
       {/* Category Header */}
@@ -530,6 +537,16 @@ export function MarketSection({ onBack }: MarketSectionProps) {
           })}
         </div>
       )}
+
+      {/* Add Product Dialog */}
+      <AddItemDialog
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        type="product"
+        onSuccess={() => {
+          fetchProducts();
+        }}
+      />
     </div>
   );
 }
