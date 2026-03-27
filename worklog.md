@@ -314,32 +314,35 @@ Stage Summary:
 
 ---
 Task ID: 15
-Agent: API Developer Agent
-Task: إنشاء وتحديث API routes للسماح للمستخدمين بإضافة محتوى
+Agent: Main Agent + Subagents
+Task: إضافة إمكانية النشر للمستخدمين في جميع الأقسام
 
 Work Log:
-- تحديث API المنتجات (/api/products/route.ts):
-  - إضافة حقول المورد: supplier_name, supplier_phone, supplier_email
-  - إضافة حقول الموقع: city, wilaya
-  - دعم حقل `title` بالإضافة إلى `name`
-  - إضافة `created_at` تلقائياً
-- إنشاء API تسجيل الحرفيين (/api/craftsmen/route.ts):
-  - إضافة دالة POST لتسجيل حرفي جديد
-  - الحقول: name, category, specialty, city, wilaya, phone, email, experience_years, bio, images
-  - إنشاء ID فريد بصيغة `craft-{timestamp}-{random}`
-- إنشاء API إضافة الشركات (/api/companies/route.ts):
-  - إضافة دالة POST لإضافة شركة
-  - الحقول: name, company_type, description, email, phone, website, city, wilaya
-  - إنشاء ID فريد بصيغة `comp-{timestamp}-{random}`
-- التحقق من API الوظائف (/api/jobs/route.ts):
-  - POST موجود ويدعم جميع الحقول المطلوبة
-  - الحقول: title, description, category, company_name, city, wilaya, salary_range, experience_level, contact_email, contact_phone, deadline
-- التحقق من API المشاريع (/api/projects/route.ts):
-  - POST موجود ويدعم جميع الحقول المطلوبة
-  - الحقول: title, description, category, status, progress, budget, location, wilaya, start_date, end_date
+- إنشاء AddItemDialog component موحد للنشر في جميع الأقسام
+- تحديث سوق البناء (market-section.tsx):
+  - إضافة زر "إضافة منتج"
+  - إضافة نموذج إضافة منتج
+- تحديث دليل الحرفيين (craftsmen-section.tsx):
+  - إضافة زر "سجل كحرفي"
+  - إضافة نموذج تسجيل حرفي
+- تحديث قسم الشركات (companies-section.tsx):
+  - إضافة زر "إضافة شركة"
+  - إضافة نموذج إضافة شركة
+- تحديث قسم الوظائف (jobs-section.tsx):
+  - إضافة زر "نشر وظيفة"
+  - إضافة نموذج نشر وظيفة
+- تحديث قسم المشاريع (projects-section.tsx):
+  - إضافة زر "إضافة مشروع"
+  - إضافة نموذج إضافة مشروع
+- تحديث API routes:
+  - /api/products/route.ts - دعم POST
+  - /api/craftsmen/route.ts - دعم POST
+  - /api/companies/route.ts - دعم POST
+  - /api/jobs/route.ts - دعم POST
+  - /api/projects/route.ts - دعم POST
 
 Stage Summary:
-- تم تحديث جميع APIs المطلوبة لتدعم إضافة المحتوى
-- جميع الملفات تمر فحص ESLint بدون أخطاء
-- IDs فريدة تُنشأ بصيغة `{type}-{timestamp}-{random}`
-- جميع الـ inserts تتضمن `created_at` تلقائياً
+- المستخدمون يمكنهم الآن النشر في جميع الأقسام
+- تم إنشاء AddItemDialog component موحد
+- جميع الأقسام تدعم RTL/LTR
+- تم رفع التحديثات على GitHub (commit: 323273a)
