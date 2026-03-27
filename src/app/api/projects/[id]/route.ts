@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/db';
 
-// GET - Get single job
+// GET - Get single project
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -9,24 +9,24 @@ export async function GET(
   try {
     const { id } = await params;
     
-    const { data: job, error } = await supabase
-      .from('jobs')
+    const { data: project, error } = await supabase
+      .from('projects')
       .select('*')
       .eq('id', id)
       .single();
 
     if (error) {
-      return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ job });
+    return NextResponse.json({ project });
   } catch (error) {
-    console.error('Get job error:', error);
-    return NextResponse.json({ error: 'Failed to get job' }, { status: 500 });
+    console.error('Get project error:', error);
+    return NextResponse.json({ error: 'Failed to get project' }, { status: 500 });
   }
 }
 
-// PUT - Update job
+// PUT - Update project
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -39,32 +39,31 @@ export async function PUT(
       title,
       description,
       category,
-      company_name,
+      status,
+      progress,
+      budget,
+      location,
       city,
       wilaya,
-      salary_range,
-      experience_level,
-      contact_email,
-      contact_phone,
-      deadline,
-      status,
+      start_date,
+      end_date,
+      images,
     } = body;
 
-    const { data: job, error } = await supabase
-      .from('jobs')
+    const { data: project, error } = await supabase
+      .from('projects')
       .update({
         title,
         description,
         category,
-        company_name,
-        city,
+        status: status || 'planning',
+        progress: parseInt(progress) || 0,
+        budget: parseFloat(budget) || 0,
+        location: location || city,
         wilaya,
-        salary_range,
-        experience_level,
-        contact_email,
-        contact_phone,
-        deadline,
-        status: status || 'active',
+        start_date,
+        end_date,
+        images,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
@@ -73,18 +72,18 @@ export async function PUT(
 
     if (error) {
       return NextResponse.json({ 
-        error: 'Failed to update job: ' + error.message 
+        error: 'Failed to update project: ' + error.message 
       }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, job });
+    return NextResponse.json({ success: true, project });
   } catch (error) {
-    console.error('Update job error:', error);
-    return NextResponse.json({ error: 'Failed to update job' }, { status: 500 });
+    console.error('Update project error:', error);
+    return NextResponse.json({ error: 'Failed to update project' }, { status: 500 });
   }
 }
 
-// DELETE - Delete job
+// DELETE - Delete project
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -93,19 +92,19 @@ export async function DELETE(
     const { id } = await params;
     
     const { error } = await supabase
-      .from('jobs')
+      .from('projects')
       .delete()
       .eq('id', id);
 
     if (error) {
       return NextResponse.json({ 
-        error: 'Failed to delete job: ' + error.message 
+        error: 'Failed to delete project: ' + error.message 
       }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Delete job error:', error);
-    return NextResponse.json({ error: 'Failed to delete job' }, { status: 500 });
+    console.error('Delete project error:', error);
+    return NextResponse.json({ error: 'Failed to delete project' }, { status: 500 });
   }
 }

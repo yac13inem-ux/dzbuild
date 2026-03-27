@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/db';
 
-// GET - Get single job
+// GET - Get single company
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -9,24 +9,24 @@ export async function GET(
   try {
     const { id } = await params;
     
-    const { data: job, error } = await supabase
-      .from('jobs')
+    const { data: company, error } = await supabase
+      .from('companies')
       .select('*')
       .eq('id', id)
       .single();
 
     if (error) {
-      return NextResponse.json({ error: 'Job not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Company not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ job });
+    return NextResponse.json({ company });
   } catch (error) {
-    console.error('Get job error:', error);
-    return NextResponse.json({ error: 'Failed to get job' }, { status: 500 });
+    console.error('Get company error:', error);
+    return NextResponse.json({ error: 'Failed to get company' }, { status: 500 });
   }
 }
 
-// PUT - Update job
+// PUT - Update company
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -36,35 +36,34 @@ export async function PUT(
     const body = await request.json();
     
     const {
-      title,
+      name,
+      company_type,
+      type,
       description,
-      category,
-      company_name,
+      email,
+      phone,
+      website,
       city,
       wilaya,
-      salary_range,
-      experience_level,
-      contact_email,
-      contact_phone,
-      deadline,
-      status,
+      address,
+      logo,
+      specialties,
     } = body;
 
-    const { data: job, error } = await supabase
-      .from('jobs')
+    const { data: company, error } = await supabase
+      .from('companies')
       .update({
-        title,
+        name,
+        type: company_type || type,
         description,
-        category,
-        company_name,
+        email,
+        phone,
+        website,
         city,
         wilaya,
-        salary_range,
-        experience_level,
-        contact_email,
-        contact_phone,
-        deadline,
-        status: status || 'active',
+        address,
+        logo,
+        specialties,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
@@ -73,18 +72,18 @@ export async function PUT(
 
     if (error) {
       return NextResponse.json({ 
-        error: 'Failed to update job: ' + error.message 
+        error: 'Failed to update company: ' + error.message 
       }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, job });
+    return NextResponse.json({ success: true, company });
   } catch (error) {
-    console.error('Update job error:', error);
-    return NextResponse.json({ error: 'Failed to update job' }, { status: 500 });
+    console.error('Update company error:', error);
+    return NextResponse.json({ error: 'Failed to update company' }, { status: 500 });
   }
 }
 
-// DELETE - Delete job
+// DELETE - Delete company
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -93,19 +92,19 @@ export async function DELETE(
     const { id } = await params;
     
     const { error } = await supabase
-      .from('jobs')
+      .from('companies')
       .delete()
       .eq('id', id);
 
     if (error) {
       return NextResponse.json({ 
-        error: 'Failed to delete job: ' + error.message 
+        error: 'Failed to delete company: ' + error.message 
       }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Delete job error:', error);
-    return NextResponse.json({ error: 'Failed to delete job' }, { status: 500 });
+    console.error('Delete company error:', error);
+    return NextResponse.json({ error: 'Failed to delete company' }, { status: 500 });
   }
 }

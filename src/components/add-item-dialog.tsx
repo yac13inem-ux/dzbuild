@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '@/stores/app-store';
 import {
   Dialog,
@@ -20,9 +20,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { Loader2, Upload, Image as ImageIcon, X } from 'lucide-react';
+import { Loader2, Upload, Image as ImageIcon, X, Trash2, Pencil } from 'lucide-react';
 
 // Wilayas
 const WILAYAS = [
@@ -84,23 +94,31 @@ export const PROJECT_CATEGORIES = [
 
 export type ItemType = 'product' | 'craftsman' | 'company' | 'job' | 'project';
 
+interface EditItem {
+  id: string;
+  [key: string]: unknown;
+}
+
 interface AddItemDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   type: ItemType;
   onSuccess: () => void;
+  editItem?: EditItem | null;
 }
 
-export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDialogProps) {
+export function AddItemDialog({ open, onOpenChange, type, onSuccess, editItem }: AddItemDialogProps) {
   const { locale } = useAppStore();
   const isRTL = locale === 'ar';
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isEditMode = !!editItem;
 
   // Form state
   const [formData, setFormData] = useState<Record<string, string | number>>({
-    // Common
     title: '',
     description: '',
     city: '',
@@ -108,35 +126,61 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
     phone: '',
     email: '',
     image: '',
-    
-    // Product specific
     category: 'materials',
     price: '',
     unit: 'وحدة',
     supplier_name: '',
-    
-    // Craftsman specific
     name: '',
     specialty: '',
     experience_years: '0',
-    
-    // Company specific
     company_type: 'BET',
     website: '',
-    
-    // Job specific
     company_name: '',
     salary_range: '',
     experience_level: 'entry',
     deadline: '',
-    
-    // Project specific
     status: 'planning',
     progress: '0',
     budget: '',
     start_date: '',
     end_date: '',
   });
+
+  // Load edit item data
+  useEffect(() => {
+    if (editItem) {
+      const image = (editItem.images as string[])?.[0] || (editItem.image_url as string) || '';
+      setFormData({
+        title: (editItem.title as string) || (editItem.name as string) || '',
+        description: (editItem.description as string) || '',
+        city: (editItem.city as string) || (editItem.location as string) || '',
+        wilaya: (editItem.wilaya as string) || '',
+        phone: (editItem.phone as string) || (editItem.contact_phone as string) || '',
+        email: (editItem.email as string) || (editItem.contact_email as string) || '',
+        image,
+        category: (editItem.category as string) || (editItem.category_id as string) || 'materials',
+        price: (editItem.price as number)?.toString() || '',
+        unit: (editItem.unit as string) || 'وحدة',
+        supplier_name: (editItem.supplier_name as string) || '',
+        name: (editItem.name as string) || '',
+        specialty: (editItem.specialty as string) || '',
+        experience_years: (editItem.experience as number)?.toString() || '0',
+        company_type: (editItem.type as string) || 'BET',
+        website: (editItem.website as string) || '',
+        company_name: (editItem.company_name as string) || '',
+        salary_range: (editItem.salary_range as string) || '',
+        experience_level: (editItem.experience_level as string) || 'entry',
+        deadline: (editItem.deadline as string)?.split('T')[0] || '',
+        status: (editItem.status as string) || 'planning',
+        progress: (editItem.progress as number)?.toString() || '0',
+        budget: (editItem.budget as number)?.toString() || '',
+        start_date: (editItem.start_date as string)?.split('T')[0] || '',
+        end_date: (editItem.end_date as string)?.split('T')[0] || '',
+      });
+    } else {
+      resetForm();
+    }
+  }, [editItem]);
 
   const resetForm = () => {
     setFormData({
@@ -177,7 +221,7 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
       const formDataUpload = new FormData();
       formDataUpload.append('file', file);
 
-      const res = await fetch('/api/upload/products', {
+      const res = await fetch('/api/upload/market', {
         method: 'POST',
         body: formDataUpload,
       });
@@ -189,7 +233,7 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
       } else {
         toast.error(isRTL ? 'خطأ في رفع الصورة' : 'Upload error');
       }
-    } catch (error) {
+    } catch {
       toast.error(isRTL ? 'خطأ في رفع الصورة' : 'Upload error');
     } finally {
       setUploading(false);
@@ -203,11 +247,19 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
     setSaving(true);
     try {
       let endpoint = '';
+      let method = 'POST';
       let body: Record<string, unknown> = {};
+
+      if (isEditMode && editItem) {
+        endpoint = `/api/${type}s/${editItem.id}`;
+        method = 'PUT';
+      } else {
+        endpoint = `/api/${type}s`;
+        method = 'POST';
+      }
 
       switch (type) {
         case 'product':
-          endpoint = '/api/products';
           body = {
             title: formData.title,
             description: formData.description,
@@ -224,7 +276,6 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
           break;
 
         case 'craftsman':
-          endpoint = '/api/craftsmen';
           body = {
             name: formData.name || formData.title,
             category: formData.category,
@@ -240,7 +291,6 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
           break;
 
         case 'company':
-          endpoint = '/api/companies';
           body = {
             name: formData.name || formData.title,
             company_type: formData.company_type,
@@ -254,7 +304,6 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
           break;
 
         case 'job':
-          endpoint = '/api/jobs';
           body = {
             title: formData.title,
             description: formData.description,
@@ -271,7 +320,6 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
           break;
 
         case 'project':
-          endpoint = '/api/projects';
           body = {
             title: formData.title,
             description: formData.description,
@@ -283,48 +331,89 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
             wilaya: formData.wilaya,
             start_date: formData.start_date || null,
             end_date: formData.end_date || null,
+            images: formData.image ? [formData.image] : [],
           };
           break;
       }
 
       const res = await fetch(endpoint, {
-        method: 'POST',
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
 
       if (res.ok) {
-        toast.success(isRTL ? 'تمت الإضافة بنجاح' : 'Ajouté avec succès');
+        toast.success(isRTL 
+          ? (isEditMode ? 'تم التحديث بنجاح' : 'تمت الإضافة بنجاح') 
+          : (isEditMode ? 'Mis à jour' : 'Ajouté avec succès'));
         resetForm();
         onOpenChange(false);
         onSuccess();
       } else {
         const error = await res.json();
-        toast.error(error.error || (isRTL ? 'خطأ في الإضافة' : 'Erreur'));
+        toast.error(error.error || (isRTL ? 'خطأ' : 'Erreur'));
       }
-    } catch (error) {
-      toast.error(isRTL ? 'خطأ في الإضافة' : 'Erreur');
+    } catch {
+      toast.error(isRTL ? 'خطأ' : 'Erreur');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!editItem) return;
+    
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/${type}s/${editItem.id}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        toast.success(isRTL ? 'تم الحذف بنجاح' : 'Supprimé');
+        setShowDeleteConfirm(false);
+        onOpenChange(false);
+        onSuccess();
+      } else {
+        const error = await res.json();
+        toast.error(error.error || (isRTL ? 'خطأ في الحذف' : 'Erreur'));
+      }
+    } catch {
+      toast.error(isRTL ? 'خطأ في الحذف' : 'Erreur');
     } finally {
       setSaving(false);
     }
   };
 
   const getTitle = () => {
-    switch (type) {
-      case 'product': return isRTL ? 'إضافة منتج' : 'Ajouter un produit';
-      case 'craftsman': return isRTL ? 'تسجيل كحرفي' : "S'inscrire comme artisan";
-      case 'company': return isRTL ? 'إضافة شركة' : 'Ajouter une entreprise';
-      case 'job': return isRTL ? 'إضافة وظيفة' : 'Publier une offre';
-      case 'project': return isRTL ? 'إضافة مشروع' : 'Ajouter un projet';
-    }
+    const titles = {
+      product: isEditMode 
+        ? (isRTL ? 'تعديل المنتج' : 'Modifier le produit')
+        : (isRTL ? 'إضافة منتج' : 'Ajouter un produit'),
+      craftsman: isEditMode
+        ? (isRTL ? 'تعديل الحرفي' : "Modifier l'artisan")
+        : (isRTL ? 'تسجيل كحرفي' : "S'inscrire comme artisan"),
+      company: isEditMode
+        ? (isRTL ? 'تعديل الشركة' : "Modifier l'entreprise")
+        : (isRTL ? 'إضافة شركة' : 'Ajouter une entreprise'),
+      job: isEditMode
+        ? (isRTL ? 'تعديل الوظيفة' : "Modifier l'offre")
+        : (isRTL ? 'إضافة وظيفة' : 'Publier une offre'),
+      project: isEditMode
+        ? (isRTL ? 'تعديل المشروع' : 'Modifier le projet')
+        : (isRTL ? 'إضافة مشروع' : 'Ajouter un projet'),
+    };
+    return titles[type];
   };
 
   const getCategories = () => {
     switch (type) {
       case 'product':
+        return MARKET_CATEGORIES;
       case 'craftsman':
+        return CRAFTSMAN_CATEGORIES;
       case 'job':
-        return type === 'craftsman' ? CRAFTSMAN_CATEGORIES : type === 'job' ? JOB_CATEGORIES : MARKET_CATEGORIES;
+        return JOB_CATEGORIES;
       case 'project':
         return PROJECT_CATEGORIES;
       default:
@@ -333,392 +422,435 @@ export function AddItemDialog({ open, onOpenChange, type, onSuccess }: AddItemDi
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{getTitle()}</DialogTitle>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {isEditMode && <Pencil className="h-5 w-5" />}
+              {getTitle()}
+            </DialogTitle>
+          </DialogHeader>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          {/* Title / Name */}
-          {(type === 'product' || type === 'job' || type === 'project') && (
-            <div className="sm:col-span-2">
-              <Label>{isRTL ? 'العنوان' : 'Titre'} *</Label>
-              <Input
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder={isRTL ? 'أدخل العنوان' : 'Entrez le titre'}
-              />
-            </div>
-          )}
-
-          {(type === 'craftsman' || type === 'company') && (
-            <div className="sm:col-span-2">
-              <Label>{isRTL ? 'الاسم' : 'Nom'} *</Label>
-              <Input
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder={isRTL ? 'أدخل الاسم' : 'Entrez le nom'}
-              />
-            </div>
-          )}
-
-          {/* Category */}
-          {['product', 'craftsman', 'job', 'project'].includes(type) && (
-            <div>
-              <Label>{isRTL ? 'القسم' : 'Catégorie'} *</Label>
-              <Select 
-                value={formData.category} 
-                onValueChange={(v) => setFormData({ ...formData, category: v })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {getCategories().map((cat: { id: string; nameAr: string; nameFr: string }) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {isRTL ? cat.nameAr : cat.nameFr}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          {/* Company Type */}
-          {type === 'company' && (
-            <div>
-              <Label>{isRTL ? 'نوع الشركة' : "Type d'entreprise"} *</Label>
-              <Select 
-                value={formData.company_type} 
-                onValueChange={(v) => setFormData({ ...formData, company_type: v })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {COMPANY_TYPES.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {isRTL ? cat.nameAr : cat.nameFr}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          {/* Description */}
-          <div className="sm:col-span-2">
-            <Label>{isRTL ? 'الوصف' : 'Description'}</Label>
-            <Textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder={isRTL ? 'أدخل الوصف' : 'Entrez la description'}
-              className="min-h-[100px]"
-            />
-          </div>
-
-          {/* City */}
-          <div>
-            <Label>{isRTL ? 'المدينة' : 'Ville'}</Label>
-            <Input
-              value={formData.city}
-              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              placeholder={isRTL ? 'المدينة' : 'Ville'}
-            />
-          </div>
-
-          {/* Wilaya */}
-          <div>
-            <Label>{isRTL ? 'الولاية' : 'Wilaya'}</Label>
-            <Select 
-              value={formData.wilaya} 
-              onValueChange={(v) => setFormData({ ...formData, wilaya: v })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={isRTL ? "اختر الولاية" : "Choisir"} />
-              </SelectTrigger>
-              <SelectContent>
-                {WILAYAS.map((w) => (
-                  <SelectItem key={w} value={w}>{w}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Phone */}
-          <div>
-            <Label>{isRTL ? 'الهاتف' : 'Téléphone'}</Label>
-            <Input
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="0XXX XXX XXX"
-              dir="ltr"
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <Label>{isRTL ? 'البريد الإلكتروني' : 'Email'}</Label>
-            <Input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="example@email.com"
-              dir="ltr"
-            />
-          </div>
-
-          {/* Product specific fields */}
-          {type === 'product' && (
-            <>
-              <div>
-                <Label>{isRTL ? 'السعر (دج)' : 'Prix (DZD)'} *</Label>
-                <Input
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  placeholder="0"
-                />
-              </div>
-              <div>
-                <Label>{isRTL ? 'الوحدة' : 'Unité'}</Label>
-                <Select 
-                  value={formData.unit} 
-                  onValueChange={(v) => setFormData({ ...formData, unit: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="وحدة">{isRTL ? 'وحدة' : 'Unité'}</SelectItem>
-                    <SelectItem value="متر">{isRTL ? 'متر' : 'Mètre'}</SelectItem>
-                    <SelectItem value="متر مربع">{isRTL ? 'متر مربع' : 'M²'}</SelectItem>
-                    <SelectItem value="متر مكعب">{isRTL ? 'متر مكعب' : 'M³'}</SelectItem>
-                    <SelectItem value="طن">{isRTL ? 'طن' : 'Tonne'}</SelectItem>
-                    <SelectItem value="كيس">{isRTL ? 'كيس' : 'Sac'}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            {/* Title / Name */}
+            {(type === 'product' || type === 'job' || type === 'project') && (
               <div className="sm:col-span-2">
-                <Label>{isRTL ? 'اسم المورد' : 'Nom du fournisseur'}</Label>
+                <Label>{isRTL ? 'العنوان' : 'Titre'} *</Label>
                 <Input
-                  value={formData.supplier_name}
-                  onChange={(e) => setFormData({ ...formData, supplier_name: e.target.value })}
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  placeholder={isRTL ? 'أدخل العنوان' : 'Entrez le titre'}
                 />
-              </div>
-            </>
-          )}
-
-          {/* Craftsman specific fields */}
-          {type === 'craftsman' && (
-            <>
-              <div>
-                <Label>{isRTL ? 'التخصص' : 'Spécialité'}</Label>
-                <Input
-                  value={formData.specialty}
-                  onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>{isRTL ? 'سنوات الخبرة' : "Années d'expérience"}</Label>
-                <Input
-                  type="number"
-                  value={formData.experience_years}
-                  onChange={(e) => setFormData({ ...formData, experience_years: e.target.value })}
-                />
-              </div>
-            </>
-          )}
-
-          {/* Company specific fields */}
-          {type === 'company' && (
-            <div className="sm:col-span-2">
-              <Label>{isRTL ? 'الموقع الإلكتروني' : 'Site web'}</Label>
-              <Input
-                value={formData.website}
-                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                placeholder="https://example.com"
-                dir="ltr"
-              />
-            </div>
-          )}
-
-          {/* Job specific fields */}
-          {type === 'job' && (
-            <>
-              <div>
-                <Label>{isRTL ? 'اسم الشركة' : 'Nom de la société'} *</Label>
-                <Input
-                  value={formData.company_name}
-                  onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>{isRTL ? 'مستوى الخبرة' : "Niveau d'expérience"}</Label>
-                <Select 
-                  value={formData.experience_level} 
-                  onValueChange={(v) => setFormData({ ...formData, experience_level: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="entry">{isRTL ? 'مبتدئ (0-1 سنة)' : 'Débutant (0-1 an)'}</SelectItem>
-                    <SelectItem value="junior">{isRTL ? 'مبتدئ (1-3 سنوات)' : 'Junior (1-3 ans)'}</SelectItem>
-                    <SelectItem value="mid">{isRTL ? 'متوسط (3-5 سنوات)' : 'Intermédiaire (3-5 ans)'}</SelectItem>
-                    <SelectItem value="senior">{isRTL ? 'خبير (5+ سنوات)' : 'Senior (5+ ans)'}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label>{isRTL ? 'نطاق الراتب' : 'Salaire'}</Label>
-                <Input
-                  value={formData.salary_range}
-                  onChange={(e) => setFormData({ ...formData, salary_range: e.target.value })}
-                  placeholder={isRTL ? 'مثال: 50000-70000 دج' : 'Ex: 50000-70000 DA'}
-                />
-              </div>
-              <div>
-                <Label>{isRTL ? 'آخر موعد' : 'Date limite'}</Label>
-                <Input
-                  type="date"
-                  value={formData.deadline}
-                  onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                />
-              </div>
-            </>
-          )}
-
-          {/* Project specific fields */}
-          {type === 'project' && (
-            <>
-              <div>
-                <Label>{isRTL ? 'الحالة' : 'Statut'}</Label>
-                <Select 
-                  value={formData.status} 
-                  onValueChange={(v) => setFormData({ ...formData, status: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="planning">{isRTL ? 'تخطيط' : 'Planification'}</SelectItem>
-                    <SelectItem value="in_progress">{isRTL ? 'قيد التنفيذ' : 'En cours'}</SelectItem>
-                    <SelectItem value="completed">{isRTL ? 'مكتمل' : 'Terminé'}</SelectItem>
-                    <SelectItem value="on_hold">{isRTL ? 'متوقف' : 'En pause'}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label>{isRTL ? 'التقدم (%)' : 'Progression (%)'}</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={formData.progress}
-                  onChange={(e) => setFormData({ ...formData, progress: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>{isRTL ? 'الميزانية (دج)' : 'Budget (DZD)'}</Label>
-                <Input
-                  type="number"
-                  value={formData.budget}
-                  onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>{isRTL ? 'تاريخ البدء' : 'Date de début'}</Label>
-                <Input
-                  type="date"
-                  value={formData.start_date}
-                  onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>{isRTL ? 'تاريخ الانتهاء' : 'Date de fin'}</Label>
-                <Input
-                  type="date"
-                  value={formData.end_date}
-                  onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                />
-              </div>
-            </>
-          )}
-
-          {/* Image Upload */}
-          <div className="sm:col-span-2 space-y-2">
-            <Label className="flex items-center gap-2">
-              <ImageIcon className="h-4 w-4" />
-              {isRTL ? 'صورة' : 'Image'}
-            </Label>
-
-            {formData.image ? (
-              <div className="relative inline-block">
-                <img
-                  src={formData.image}
-                  alt="Uploaded"
-                  className="w-full max-w-xs h-40 object-cover rounded-lg border"
-                />
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  className="absolute top-2 end-2 h-6 w-6 p-0"
-                  onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              </div>
-            ) : (
-              <div className="w-full max-w-xs h-40 rounded-lg border-2 border-dashed border-white/20 flex items-center justify-center bg-muted">
-                <ImageIcon className="h-8 w-8 text-muted-foreground" />
               </div>
             )}
 
-            <div className="mt-2">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/jpeg,image/png,image/gif,image/webp"
-                className="hidden"
+            {(type === 'craftsman' || type === 'company') && (
+              <div className="sm:col-span-2">
+                <Label>{isRTL ? 'الاسم' : 'Nom'} *</Label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder={isRTL ? 'أدخل الاسم' : 'Entrez le nom'}
+                />
+              </div>
+            )}
+
+            {/* Category */}
+            {['product', 'craftsman', 'job', 'project'].includes(type) && (
+              <div>
+                <Label>{isRTL ? 'القسم' : 'Catégorie'} *</Label>
+                <Select 
+                  value={formData.category as string} 
+                  onValueChange={(v) => setFormData({ ...formData, category: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getCategories().map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {isRTL ? cat.nameAr : cat.nameFr}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Company Type */}
+            {type === 'company' && (
+              <div>
+                <Label>{isRTL ? 'نوع الشركة' : "Type d'entreprise"} *</Label>
+                <Select 
+                  value={formData.company_type as string} 
+                  onValueChange={(v) => setFormData({ ...formData, company_type: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COMPANY_TYPES.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {isRTL ? cat.nameAr : cat.nameFr}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Description */}
+            <div className="sm:col-span-2">
+              <Label>{isRTL ? 'الوصف' : 'Description'}</Label>
+              <Textarea
+                value={formData.description as string}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder={isRTL ? 'أدخل الوصف' : 'Entrez la description'}
+                className="min-h-[100px]"
               />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="gap-2"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
+            </div>
+
+            {/* City */}
+            <div>
+              <Label>{isRTL ? 'المدينة' : 'Ville'}</Label>
+              <Input
+                value={formData.city as string}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                placeholder={isRTL ? 'المدينة' : 'Ville'}
+              />
+            </div>
+
+            {/* Wilaya */}
+            <div>
+              <Label>{isRTL ? 'الولاية' : 'Wilaya'}</Label>
+              <Select 
+                value={formData.wilaya as string} 
+                onValueChange={(v) => setFormData({ ...formData, wilaya: v })}
               >
-                {uploading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    {isRTL ? 'جاري الرفع...' : 'Envoi...'}
-                  </>
-                ) : (
-                  <>
-                    <Upload className="h-4 w-4" />
-                    {isRTL ? 'رفع صورة' : 'Télécharger'}
-                  </>
-                )}
-              </Button>
+                <SelectTrigger>
+                  <SelectValue placeholder={isRTL ? "اختر الولاية" : "Choisir"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {WILAYAS.map((w) => (
+                    <SelectItem key={w} value={w}>{w}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Phone */}
+            <div>
+              <Label>{isRTL ? 'الهاتف' : 'Téléphone'}</Label>
+              <Input
+                value={formData.phone as string}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="0XXX XXX XXX"
+                dir="ltr"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <Label>{isRTL ? 'البريد الإلكتروني' : 'Email'}</Label>
+              <Input
+                type="email"
+                value={formData.email as string}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="example@email.com"
+                dir="ltr"
+              />
+            </div>
+
+            {/* Product specific fields */}
+            {type === 'product' && (
+              <>
+                <div>
+                  <Label>{isRTL ? 'السعر (دج)' : 'Prix (DZD)'} *</Label>
+                  <Input
+                    type="number"
+                    value={formData.price as string}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'الوحدة' : 'Unité'}</Label>
+                  <Select 
+                    value={formData.unit as string} 
+                    onValueChange={(v) => setFormData({ ...formData, unit: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="وحدة">{isRTL ? 'وحدة' : 'Unité'}</SelectItem>
+                      <SelectItem value="متر">{isRTL ? 'متر' : 'Mètre'}</SelectItem>
+                      <SelectItem value="متر مربع">{isRTL ? 'متر مربع' : 'M²'}</SelectItem>
+                      <SelectItem value="متر مكعب">{isRTL ? 'متر مكعب' : 'M³'}</SelectItem>
+                      <SelectItem value="طن">{isRTL ? 'طن' : 'Tonne'}</SelectItem>
+                      <SelectItem value="كيس">{isRTL ? 'كيس' : 'Sac'}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="sm:col-span-2">
+                  <Label>{isRTL ? 'اسم المورد' : 'Nom du fournisseur'}</Label>
+                  <Input
+                    value={formData.supplier_name as string}
+                    onChange={(e) => setFormData({ ...formData, supplier_name: e.target.value })}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Craftsman specific fields */}
+            {type === 'craftsman' && (
+              <>
+                <div>
+                  <Label>{isRTL ? 'التخصص' : 'Spécialité'}</Label>
+                  <Input
+                    value={formData.specialty as string}
+                    onChange={(e) => setFormData({ ...formData, specialty: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'سنوات الخبرة' : "Années d'expérience"}</Label>
+                  <Input
+                    type="number"
+                    value={formData.experience_years as string}
+                    onChange={(e) => setFormData({ ...formData, experience_years: e.target.value })}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Company specific fields */}
+            {type === 'company' && (
+              <div className="sm:col-span-2">
+                <Label>{isRTL ? 'الموقع الإلكتروني' : 'Site web'}</Label>
+                <Input
+                  value={formData.website as string}
+                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                  placeholder="https://example.com"
+                  dir="ltr"
+                />
+              </div>
+            )}
+
+            {/* Job specific fields */}
+            {type === 'job' && (
+              <>
+                <div>
+                  <Label>{isRTL ? 'اسم الشركة' : 'Nom de la société'} *</Label>
+                  <Input
+                    value={formData.company_name as string}
+                    onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'مستوى الخبرة' : "Niveau d'expérience"}</Label>
+                  <Select 
+                    value={formData.experience_level as string} 
+                    onValueChange={(v) => setFormData({ ...formData, experience_level: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="entry">{isRTL ? 'مبتدئ (0-1 سنة)' : 'Débutant (0-1 an)'}</SelectItem>
+                      <SelectItem value="junior">{isRTL ? 'مبتدئ (1-3 سنوات)' : 'Junior (1-3 ans)'}</SelectItem>
+                      <SelectItem value="mid">{isRTL ? 'متوسط (3-5 سنوات)' : 'Intermédiaire (3-5 ans)'}</SelectItem>
+                      <SelectItem value="senior">{isRTL ? 'خبير (5+ سنوات)' : 'Senior (5+ ans)'}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>{isRTL ? 'نطاق الراتب' : 'Salaire'}</Label>
+                  <Input
+                    value={formData.salary_range as string}
+                    onChange={(e) => setFormData({ ...formData, salary_range: e.target.value })}
+                    placeholder={isRTL ? 'مثال: 50000-70000 دج' : 'Ex: 50000-70000 DA'}
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'آخر موعد' : 'Date limite'}</Label>
+                  <Input
+                    type="date"
+                    value={formData.deadline as string}
+                    onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Project specific fields */}
+            {type === 'project' && (
+              <>
+                <div>
+                  <Label>{isRTL ? 'الحالة' : 'Statut'}</Label>
+                  <Select 
+                    value={formData.status as string} 
+                    onValueChange={(v) => setFormData({ ...formData, status: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="planning">{isRTL ? 'تخطيط' : 'Planification'}</SelectItem>
+                      <SelectItem value="in_progress">{isRTL ? 'قيد التنفيذ' : 'En cours'}</SelectItem>
+                      <SelectItem value="completed">{isRTL ? 'مكتمل' : 'Terminé'}</SelectItem>
+                      <SelectItem value="on_hold">{isRTL ? 'متوقف' : 'En pause'}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>{isRTL ? 'التقدم (%)' : 'Progression (%)'}</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={formData.progress as string}
+                    onChange={(e) => setFormData({ ...formData, progress: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'الميزانية (دج)' : 'Budget (DZD)'}</Label>
+                  <Input
+                    type="number"
+                    value={formData.budget as string}
+                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'تاريخ البدء' : 'Date de début'}</Label>
+                  <Input
+                    type="date"
+                    value={formData.start_date as string}
+                    onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>{isRTL ? 'تاريخ الانتهاء' : 'Date de fin'}</Label>
+                  <Input
+                    type="date"
+                    value={formData.end_date as string}
+                    onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Image Upload */}
+            <div className="sm:col-span-2 space-y-2">
+              <Label className="flex items-center gap-2">
+                <ImageIcon className="h-4 w-4" />
+                {isRTL ? 'صورة' : 'Image'}
+              </Label>
+
+              {formData.image ? (
+                <div className="relative inline-block">
+                  <img
+                    src={formData.image as string}
+                    alt="Uploaded"
+                    className="w-full max-w-xs h-40 object-cover rounded-lg border"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 end-2 h-6 w-6 p-0"
+                    onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="w-full max-w-xs h-40 rounded-lg border-2 border-dashed border-white/20 flex items-center justify-center bg-muted">
+                  <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                </div>
+              )}
+
+              <div className="mt-2">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/jpeg,image/png,image/gif,image/webp"
+                  className="hidden"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      {isRTL ? 'جاري الرفع...' : 'Envoi...'}
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4" />
+                      {isRTL ? 'رفع صورة' : 'Télécharger'}
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <DialogFooter className="mt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {isRTL ? 'إلغاء' : 'Annuler'}
-          </Button>
-          <Button onClick={handleSubmit} disabled={saving}>
-            {saving && <Loader2 className="h-4 w-4 animate-spin me-2" />}
-            {isRTL ? 'إضافة' : 'Ajouter'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <DialogFooter className="mt-4 flex flex-wrap gap-2">
+            {isEditMode && (
+              <Button 
+                variant="destructive" 
+                onClick={() => setShowDeleteConfirm(true)}
+                className="gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                {isRTL ? 'حذف' : 'Supprimer'}
+              </Button>
+            )}
+            <div className="flex-1" />
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              {isRTL ? 'إلغاء' : 'Annuler'}
+            </Button>
+            <Button onClick={handleSubmit} disabled={saving}>
+              {saving && <Loader2 className="h-4 w-4 animate-spin me-2" />}
+              {isEditMode 
+                ? (isRTL ? 'تحديث' : 'Mettre à jour')
+                : (isRTL ? 'إضافة' : 'Ajouter')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {isRTL ? 'تأكيد الحذف' : 'Confirmer la suppression'}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {isRTL 
+                ? 'هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.'
+                : 'Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{isRTL ? 'إلغاء' : 'Annuler'}</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isRTL ? 'حذف' : 'Supprimer'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

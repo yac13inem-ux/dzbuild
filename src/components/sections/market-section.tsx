@@ -28,8 +28,11 @@ import {
   Droplets,
   Award,
   Plus,
+  Edit,
+  Trash2,
 } from 'lucide-react';
 import { AddItemDialog } from '@/components/add-item-dialog';
+import { CommentsSection } from '@/components/comments-section';
 
 interface MarketSectionProps {
   onBack?: () => void;
@@ -321,6 +324,13 @@ export function MarketSection({ onBack }: MarketSectionProps) {
             </Button>
           )}
         </div>
+
+        {/* Comments Section */}
+        <Card>
+          <CardContent className="p-4">
+            <CommentsSection itemType="product" itemId={selectedProduct.id} />
+          </CardContent>
+        </Card>
       </div>
     );
   }

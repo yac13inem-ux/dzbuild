@@ -490,6 +490,14 @@ export function AdminDashboard() {
                 <RefreshCw className="h-4 w-4" />
                 {isRTL ? 'تحديث' : 'Refresh'}
               </Button>
+              <Button 
+                variant="outline" 
+                className="gap-2 border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-400"
+                onClick={logout}
+              >
+                <LogOut className="h-4 w-4" />
+                {isRTL ? 'خروج' : 'Logout'}
+              </Button>
             </div>
           </div>
         </header>
