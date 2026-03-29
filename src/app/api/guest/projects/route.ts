@@ -134,35 +134,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT - Update project (requires edit_token or admin)
+// PUT - Update project (no edit code required)
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, editToken, isAdmin, ...updateData } = body;
+    const { id, ...updateData } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'المعرف مطلوب' }, { status: 400 });
-    }
-
-    // If not admin, verify edit_token
-    if (!isAdmin) {
-      if (!editToken) {
-        return NextResponse.json({ error: 'رمز التحرير مطلوب' }, { status: 403 });
-      }
-
-      const { data: project, error: fetchError } = await supabase
-        .from('projects')
-        .select('edit_token')
-        .eq('id', id)
-        .single();
-
-      if (fetchError || !project) {
-        return NextResponse.json({ error: 'المشروع غير موجود' }, { status: 404 });
-      }
-
-      if (project.edit_token && project.edit_token !== editToken) {
-        return NextResponse.json({ error: 'غير مصرح لك بتعديل هذا المشروع' }, { status: 403 });
-      }
     }
 
     const updateFields: Record<string, unknown> = {
@@ -199,37 +178,14 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE - Delete project (requires edit_token or admin)
+// DELETE - Delete project (no edit code required)
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
-    const editToken = searchParams.get('editToken');
-    const isAdmin = searchParams.get('isAdmin') === 'true';
 
     if (!id) {
       return NextResponse.json({ error: 'المعرف مطلوب' }, { status: 400 });
-    }
-
-    // If not admin, verify edit_token
-    if (!isAdmin) {
-      if (!editToken) {
-        return NextResponse.json({ error: 'رمز التحرير مطلوب' }, { status: 403 });
-      }
-
-      const { data: project, error: fetchError } = await supabase
-        .from('projects')
-        .select('edit_token')
-        .eq('id', id)
-        .single();
-
-      if (fetchError || !project) {
-        return NextResponse.json({ error: 'المشروع غير موجود' }, { status: 404 });
-      }
-
-      if (project.edit_token && project.edit_token !== editToken) {
-        return NextResponse.json({ error: 'غير مصرح لك بحذف هذا المشروع' }, { status: 403 });
-      }
     }
 
     const { error } = await supabase.from('projects').delete().eq('id', id);

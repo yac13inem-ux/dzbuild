@@ -166,12 +166,11 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
     }
   };
   
-  // Check if user owns a project
+  // Check if user can modify (always true now, no code needed)
   const isProjectOwner = (project: Project): boolean => {
     const { isLoggedIn, user } = useAppStore.getState();
     if (isLoggedIn && user?.role === 'ADMIN') return true;
-    const myTokens = getMyProjectTokens();
-    return !!myTokens[project.id] || !!project.edit_token;
+    return true; // Allow everyone to edit/delete
   };
   
   // Get edit token for a project
@@ -180,23 +179,12 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
     return myTokens[project.id] || project.edit_token;
   };
   
-  // Handle delete project
+  // Handle delete project (no code required)
   const handleDeleteProject = async (projectId: string) => {
     try {
-      const { isLoggedIn, user } = useAppStore.getState();
-      const myTokens = getMyProjectTokens();
-      const editToken = myTokens[projectId] || (selectedProject && getProjectEditToken(selectedProject));
-      const isAdmin = isLoggedIn && user?.role === 'ADMIN';
-      
-      const url = `/api/guest/projects?id=${projectId}${editToken ? `&editToken=${editToken}` : ''}&isAdmin=${isAdmin}`;
-      const res = await fetch(url, { method: 'DELETE' });
+      const res = await fetch(`/api/guest/projects?id=${projectId}`, { method: 'DELETE' });
       
       if (res.ok) {
-        // Remove from localStorage
-        const tokens = getMyProjectTokens();
-        delete tokens[projectId];
-        localStorage.setItem('dzbuild_my_projects', JSON.stringify(tokens));
-        
         toast.success(isRTL ? 'تم حذف المشروع' : 'Projet supprimé');
         setSelectedProject(null);
         fetchProjects();

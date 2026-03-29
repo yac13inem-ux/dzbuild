@@ -208,12 +208,11 @@ export function JobsSection({ onBack }: JobsSectionProps) {
     }
   };
   
-  // Check if user owns a job
+  // Check if user can modify (always true now, no code needed)
   const isJobOwner = (job: Job): boolean => {
     const { isLoggedIn, user } = useAppStore.getState();
     if (isLoggedIn && user?.role === 'ADMIN') return true;
-    const myTokens = getMyJobTokens();
-    return !!myTokens[job.id] || !!job.edit_token;
+    return true; // Allow everyone to edit/delete
   };
   
   // Get edit token for a job
@@ -222,23 +221,12 @@ export function JobsSection({ onBack }: JobsSectionProps) {
     return myTokens[job.id] || job.edit_token;
   };
   
-  // Handle delete job
+  // Handle delete job (no code required)
   const handleDeleteJob = async (jobId: string) => {
     try {
-      const { isLoggedIn, user } = useAppStore.getState();
-      const myTokens = getMyJobTokens();
-      const editToken = myTokens[jobId] || (selectedJob && getJobEditToken(selectedJob));
-      const isAdmin = isLoggedIn && user?.role === 'ADMIN';
-      
-      const url = `/api/guest/jobs?id=${jobId}${editToken ? `&editToken=${editToken}` : ''}&isAdmin=${isAdmin}`;
-      const res = await fetch(url, { method: 'DELETE' });
+      const res = await fetch(`/api/guest/jobs?id=${jobId}`, { method: 'DELETE' });
       
       if (res.ok) {
-        // Remove from localStorage
-        const tokens = getMyJobTokens();
-        delete tokens[jobId];
-        localStorage.setItem('dzbuild_my_jobs', JSON.stringify(tokens));
-        
         toast.success(isRTL ? 'تم حذف الوظيفة' : 'Offre supprimée');
         setSelectedJob(null);
         fetchJobs();
