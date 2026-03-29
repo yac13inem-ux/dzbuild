@@ -656,13 +656,16 @@ export function CraftsmenSection({ onBack }: CraftsmenSectionProps) {
             const IconComp = catInfo?.icon || User;
             
             return (
-              <Card key={craftsman.id} className="cursor-pointer hover:shadow-lg transition-all hover:border-primary" onClick={() => setSelectedCraftsman(craftsman)}>
+              <Card key={craftsman.id} className="hover:shadow-lg transition-all hover:border-primary">
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className={cn('p-2 rounded-lg text-white shrink-0', catInfo?.color || 'bg-primary')}>
+                    <div 
+                      className={cn('p-2 rounded-lg text-white shrink-0 cursor-pointer', catInfo?.color || 'bg-primary')}
+                      onClick={() => setSelectedCraftsman(craftsman)}
+                    >
                       <IconComp className="h-5 w-5" />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setSelectedCraftsman(craftsman)}>
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold truncate">{craftsman.name}</h3>
                         {craftsman.is_verified && <CheckCircle className="h-4 w-4 text-green-500 shrink-0" />}
@@ -681,6 +684,32 @@ export function CraftsmenSection({ onBack }: CraftsmenSectionProps) {
                           {craftsman.experience_years || 0} {locale === 'ar' ? 'سنة' : 'ans'}
                         </span>
                       </div>
+                    </div>
+                    {/* Edit/Delete Actions - Direct on card */}
+                    <div className="flex flex-col gap-1 shrink-0">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditDialog(craftsman);
+                        }}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditCraftsman(craftsman);
+                          setShowDeleteDialog(true);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardContent>

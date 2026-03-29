@@ -717,15 +717,17 @@ export function CompaniesSection({ onBack }: CompaniesSectionProps) {
             return (
               <Card 
                 key={company.id} 
-                className="cursor-pointer hover:shadow-lg transition-all hover:border-primary"
-                onClick={() => setSelectedCompany(company)}
+                className="hover:shadow-lg transition-all hover:border-primary"
               >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className={cn('p-2 rounded-lg text-white shrink-0', typeInfo?.color || 'bg-primary')}>
+                    <div 
+                      className={cn('p-2 rounded-lg text-white shrink-0 cursor-pointer', typeInfo?.color || 'bg-primary')}
+                      onClick={() => setSelectedCompany(company)}
+                    >
                       <IconComp className="h-5 w-5" />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setSelectedCompany(company)}>
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold truncate">{company.name}</h3>
                         {company.is_verified && (
@@ -745,6 +747,32 @@ export function CompaniesSection({ onBack }: CompaniesSectionProps) {
                           <span dir="ltr">{company.phone}</span>
                         </div>
                       )}
+                    </div>
+                    {/* Edit/Delete Actions - Direct on card */}
+                    <div className="flex flex-col gap-1 shrink-0">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditDialog(company);
+                        }}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditCompany(company);
+                          setShowDeleteDialog(true);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardContent>

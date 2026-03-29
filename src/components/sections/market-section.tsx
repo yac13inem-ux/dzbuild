@@ -576,15 +576,17 @@ export function MarketSection({ onBack }: MarketSectionProps) {
             return (
               <Card 
                 key={product.id} 
-                className="cursor-pointer hover:shadow-lg transition-all hover:border-primary"
-                onClick={() => setSelectedProduct(product)}
+                className="hover:shadow-lg transition-all hover:border-primary"
               >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className={cn('p-2 rounded-lg text-white shrink-0', catInfo?.color || 'bg-primary')}>
+                    <div 
+                      className={cn('p-2 rounded-lg text-white shrink-0 cursor-pointer', catInfo?.color || 'bg-primary')}
+                      onClick={() => setSelectedProduct(product)}
+                    >
                       <IconComp className="h-5 w-5" />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setSelectedProduct(product)}>
                       <h3 className="font-semibold truncate">{product.title}</h3>
                       <div className="flex items-center gap-1 mt-1">
                         <Tag className="h-3 w-3 text-primary" />
@@ -605,6 +607,33 @@ export function MarketSection({ onBack }: MarketSectionProps) {
                           <span className="truncate">{product.supplier_name}</span>
                         </div>
                       )}
+                    </div>
+                    {/* Edit/Delete Actions - Direct on card */}
+                    <div className="flex flex-col gap-1 shrink-0">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditProduct(product);
+                        }}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm(isRTL ? 'هل أنت متأكد من حذف هذا المنتج؟' : 'Supprimer ce produit?')) {
+                            handleDeleteProduct(product.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardContent>

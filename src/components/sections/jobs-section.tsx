@@ -341,11 +341,13 @@ export function JobsSection({ onBack }: JobsSectionProps) {
     return (
       <Card 
         key={job.id} 
-        className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group border-2 border-transparent hover:border-primary/20"
-        onClick={() => setSelectedJob(job)}
+        className="overflow-hidden hover:shadow-xl transition-all duration-300 group border-2 border-transparent hover:border-primary/20"
       >
         {/* Cover with Gradient */}
-        <div className={cn("h-20 relative bg-gradient-to-br", category.gradient)}>
+        <div 
+          className={cn("h-20 relative bg-gradient-to-br cursor-pointer", category.gradient)}
+          onClick={() => setSelectedJob(job)}
+        >
           <div className="absolute inset-0 bg-black/5" />
           {job.is_featured && (
             <Badge className="absolute top-2 right-2 bg-white/90 text-amber-600 border-0 shadow-sm">
@@ -364,10 +366,37 @@ export function JobsSection({ onBack }: JobsSectionProps) {
         </div>
         
         <CardContent className="pt-8 pb-4">
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setSelectedJob(job)}>
               <h3 className="font-bold text-base truncate group-hover:text-primary transition-colors">{job.title}</h3>
               <p className="text-sm text-muted-foreground truncate">{job.company_name}</p>
+            </div>
+            {/* Edit/Delete Actions - Direct on card */}
+            <div className="flex flex-col gap-1 shrink-0">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 w-7 p-0" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditJob(job);
+                }}
+              >
+                <Edit className="h-3.5 w-3.5" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (confirm(isRTL ? 'هل أنت متأكد من حذف هذه الوظيفة؟' : 'Supprimer cette offre?')) {
+                    handleDeleteJob(job.id);
+                  }
+                }}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
             </div>
           </div>
           

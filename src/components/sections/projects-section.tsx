@@ -417,19 +417,21 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
               return (
                 <Card 
                   key={project.id} 
-                  className="overflow-hidden cursor-pointer hover:shadow-lg transition-all hover:border-primary"
-                  onClick={() => setSelectedProject(project)}
+                  className="overflow-hidden hover:shadow-lg transition-all hover:border-primary"
                 >
                   {/* Cover */}
-                  <div className={cn('h-20 flex items-center justify-center', category?.color || 'bg-gray-500')}>
+                  <div 
+                    className={cn('h-20 flex items-center justify-center cursor-pointer', category?.color || 'bg-gray-500')}
+                    onClick={() => setSelectedProject(project)}
+                  >
                     <IconComponent className="h-8 w-8 text-white/80" />
                   </div>
                   
                   <CardContent className="p-4">
                     {/* Title & Status */}
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold line-clamp-1">{title}</h3>
-                      <Badge className={cn('text-white text-xs', statusColors[project.status] || 'bg-gray-500')}>
+                    <div className="flex items-start justify-between mb-2 gap-2">
+                      <h3 className="font-semibold line-clamp-1 cursor-pointer" onClick={() => setSelectedProject(project)}>{title}</h3>
+                      <Badge className={cn('text-white text-xs shrink-0', statusColors[project.status] || 'bg-gray-500')}>
                         {statusLabels[project.status]?.[locale] || project.status}
                       </Badge>
                     </div>
@@ -459,6 +461,36 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
                       {project.budget && (
                         <span className="font-medium">{formatBudget(project.budget)}</span>
                       )}
+                    </div>
+                    
+                    {/* Edit/Delete Actions - Direct on card */}
+                    <div className="flex gap-2 mt-3 pt-3 border-t">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 h-8 text-xs gap-1" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditProject(project);
+                        }}
+                      >
+                        <Edit className="h-3 w-3" />
+                        {isRTL ? 'تعديل' : 'Modifier'}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 h-8 text-xs gap-1 text-red-500 hover:text-red-600 hover:bg-red-50" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm(isRTL ? 'هل أنت متأكد من حذف هذا المشروع؟' : 'Supprimer ce projet?')) {
+                            handleDeleteProject(project.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                        {isRTL ? 'حذف' : 'Supprimer'}
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
