@@ -685,7 +685,7 @@ export function CraftsmenSection({ onBack }: CraftsmenSectionProps) {
                         </span>
                       </div>
                     </div>
-                    {/* Edit/Delete Actions - Direct on card */}
+                    {/* Edit/Delete/Comments Actions - Direct on card */}
                     <div className="flex flex-col gap-1 shrink-0">
                       <Button 
                         variant="ghost" 
@@ -697,6 +697,17 @@ export function CraftsmenSection({ onBack }: CraftsmenSectionProps) {
                         }}
                       >
                         <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 text-primary" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedCraftsman(craftsman);
+                        }}
+                      >
+                        <MessageCircle className="h-4 w-4" />
                       </Button>
                       <Button 
                         variant="ghost" 

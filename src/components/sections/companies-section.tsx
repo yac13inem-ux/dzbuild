@@ -46,7 +46,9 @@ import {
   Send,
   Briefcase,
   CheckCircle,
+  MessageCircle,
 } from 'lucide-react';
+import { CommentsSection } from '@/components/comments-section';
 
 interface CompaniesSectionProps {
   onBack?: () => void;
@@ -538,6 +540,19 @@ export function CompaniesSection({ onBack }: CompaniesSectionProps) {
             </Button>
           )}
         </div>
+
+        {/* Comments Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <MessageCircle className="h-5 w-5" />
+              {locale === 'ar' ? 'التعليقات' : 'Commentaires'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CommentsSection itemType="company" itemId={selectedCompany.id} />
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -748,7 +763,7 @@ export function CompaniesSection({ onBack }: CompaniesSectionProps) {
                         </div>
                       )}
                     </div>
-                    {/* Edit/Delete Actions - Direct on card */}
+                    {/* Edit/Delete/Comments Actions - Direct on card */}
                     <div className="flex flex-col gap-1 shrink-0">
                       <Button 
                         variant="ghost" 
@@ -760,6 +775,17 @@ export function CompaniesSection({ onBack }: CompaniesSectionProps) {
                         }}
                       >
                         <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 text-primary" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedCompany(company);
+                        }}
+                      >
+                        <MessageCircle className="h-4 w-4" />
                       </Button>
                       <Button 
                         variant="ghost" 

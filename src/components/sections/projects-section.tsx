@@ -32,6 +32,7 @@ import {
   ChevronLeft,
   Trash2,
   MoreVertical,
+  MessageCircle,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -451,7 +452,7 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
                       )}
                     </div>
                     
-                    {/* Edit/Delete Actions - Direct on card */}
+                    {/* Edit/Delete/Comments Actions - Direct on card */}
                     <div className="flex gap-2 mt-3 pt-3 border-t">
                       <Button 
                         variant="outline" 
@@ -464,6 +465,18 @@ export function ProjectsSection({ onBack }: ProjectsSectionProps) {
                       >
                         <Edit className="h-3 w-3" />
                         {isRTL ? 'تعديل' : 'Modifier'}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 h-8 text-xs gap-1 text-primary hover:text-primary" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProject(project);
+                        }}
+                      >
+                        <MessageCircle className="h-3 w-3" />
+                        {isRTL ? 'تعليق' : 'Commenter'}
                       </Button>
                       <Button 
                         variant="outline" 

@@ -43,6 +43,7 @@ import {
   Edit,
   Trash2,
   MoreVertical,
+  MessageCircle,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -359,7 +360,7 @@ export function JobsSection({ onBack }: JobsSectionProps) {
               <h3 className="font-bold text-base truncate group-hover:text-primary transition-colors">{job.title}</h3>
               <p className="text-sm text-muted-foreground truncate">{job.company_name}</p>
             </div>
-            {/* Edit/Delete Actions - Direct on card */}
+            {/* Edit/Delete/Comments Actions - Direct on card */}
             <div className="flex flex-col gap-1 shrink-0">
               <Button 
                 variant="ghost" 
@@ -371,6 +372,17 @@ export function JobsSection({ onBack }: JobsSectionProps) {
                 }}
               >
                 <Edit className="h-3.5 w-3.5" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 w-7 p-0 text-primary" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedJob(job);
+                }}
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
               </Button>
               <Button 
                 variant="ghost" 
