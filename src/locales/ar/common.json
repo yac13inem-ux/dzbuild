@@ -1,0 +1,302 @@
+{
+  "app": {
+    "name": "DzBuild",
+    "tagline": "طموح البناء الجزائري",
+    "description": "طموح البناء الجزائري"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "guide": "دليل البناء",
+    "blueprints": "المخططات والرسومات",
+    "craftsmen": "دليل الحرفيين",
+    "companies": "شركات البناء",
+    "offices": "مكاتب الدراسات",
+    "problems": "مشاكل وحلول",
+    "diy": "افعلها بنفسك",
+    "realestate": "العقارات",
+    "consultations": "الاستشارات الهندسية",
+    "ai": "المساعد الذكي",
+    "factories": "المصانع والمواد",
+    "jobs": "فرص العمل",
+    "courses": "الدورات التدريبية",
+    "comparisons": "المقارنات",
+    "calculator": "حاسبة التكاليف",
+    "market": "السوق المفتوح",
+    "engineers": "فضاء المهندسين",
+    "videos": "مكتبة الفيديو",
+    "prices": "أسعار المنتجات",
+    "request": "طلب حرفي",
+    "reviews": "التقييمات والمراجعات",
+    "admin": "لوحة التحكم"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
+    "registerSuccess": "تم إنشاء الحساب بنجاح",
+    "logoutSuccess": "تم تسجيل الخروج بنجاح"
+  },
+  "roles": {
+    "title": "اختر دورك",
+    "subtitle": "حدد الدور الذي يصفك بشكل أفضل",
+    "civil_engineer": "مهندس مدني",
+    "contractor": "مقاول",
+    "engineering_office": "مكتب دراسات",
+    "craftsman": "حرفي",
+    "construction_company": "شركة بناء",
+    "store_factory": "متجر / مصنع",
+    "normal_user": "مستخدم عادي",
+    "admin": "مدير"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً بعودتك",
+    "overview": "نظرة عامة",
+    "statistics": "الإحصائيات",
+    "recentActivity": "النشاط الأخير",
+    "quickActions": "إجراءات سريعة",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "myPosts": "منشوراتي",
+    "myProducts": "منتجاتي",
+    "myServices": "خدماتي",
+    "myOrders": "طلباتي",
+    "myCourses": "دوراتي",
+    "myJobs": "وظائفي",
+    "messages": "الرسائل",
+    "notifications": "الإشعارات"
+  },
+  "admin": {
+    "title": "لوحة تحكم المدير",
+    "users": "إدارة المستخدمين",
+    "ads": "الإعلانات",
+    "banners": "لافتات الإعلانات",
+    "posts": "إدارة المنشورات",
+    "marketplace": "السوق",
+    "approvals": "الاعتمادات المعلقة",
+    "courses": "إدارة الدورات",
+    "jobs": "عروض العمل",
+    "prices": "أسعار المنتجات",
+    "analytics": "التحليلات",
+    "aiKnowledge": "قاعدة معرفة الذكاء الاصطناعي",
+    "settings": "إعدادات المنصة"
+  },
+  "sections": {
+    "guide": {
+      "title": "دليل البناء",
+      "subtitle": "دليل خطوة بخطوة لمراحل البناء",
+      "stages": "مراحل البناء",
+      "foundation": "الأساسات",
+      "structure": "الهيكل",
+      "plumbing": "السباكة",
+      "electrical": "الكهرباء",
+      "finishing": "التشطيب"
+    },
+    "blueprints": {
+      "title": "المخططات والرسومات",
+      "subtitle": "مكتبة المخططات المعمارية والرسومات الفنية",
+      "residential": "سكني",
+      "commercial": "تجاري",
+      "industrial": "صناعي",
+      "download": "تحميل",
+      "preview": "معاينة"
+    },
+    "craftsmen": {
+      "title": "دليل الحرفيين",
+      "subtitle": "اعثر على حرفيين مهرة بالقرب منك",
+      "search": "البحث عن حرفيين...",
+      "filter": "تصفية حسب التخصص",
+      "rating": "التقييم",
+      "available": "متاح",
+      "contact": "تواصل"
+    },
+    "companies": {
+      "title": "شركات البناء",
+      "subtitle": "دليل شركات البناء",
+      "verified": "معتمد",
+      "projects": "المشاريع",
+      "services": "الخدمات"
+    },
+    "problems": {
+      "title": "مشاكل وحلول",
+      "subtitle": "اطرح أسئلة واحصل على إجابات الخبراء",
+      "askQuestion": "اطرح سؤالاً",
+      "categories": "الفئات",
+      "solved": "تم الحل",
+      "open": "مفتوح"
+    },
+    "diy": {
+      "title": "افعلها بنفسك",
+      "subtitle": "تعلم أساسيات الإصلاح والصيانة",
+      "beginner": "مبتدئ",
+      "intermediate": "متوسط",
+      "advanced": "متقدم",
+      "duration": "المدة",
+      "materials": "المواد المطلوبة"
+    },
+    "realestate": {
+      "title": "العقارات",
+      "subtitle": "بيع وشراء وإيجار العقارات",
+      "forSale": "للبيع",
+      "forRent": "للإيجار",
+      "price": "السعر",
+      "area": "المساحة",
+      "bedrooms": "غرف النوم",
+      "bathrooms": "الحمامات"
+    },
+    "consultations": {
+      "title": "الاستشارات الهندسية",
+      "subtitle": "احصل على استشارات هندسية احترافية",
+      "bookConsultation": "احجز استشارة",
+      "pending": "قيد الانتظار",
+      "inProgress": "قيد المعالجة",
+      "completed": "مكتمل"
+    },
+    "ai": {
+      "title": "المساعد الذكي",
+      "subtitle": "خبيرك في البناء بالذكاء الاصطناعي",
+      "placeholder": "اسأل أي سؤال عن البناء...",
+      "send": "إرسال",
+      "thinking": "جاري التفكير..."
+    },
+    "factories": {
+      "title": "المصانع ومواد البناء",
+      "subtitle": "اعثر على الموردين والمصنعين",
+      "categories": "فئات المواد",
+      "verified": "مورد معتمد",
+      "delivery": "التوصيل متاح"
+    },
+    "jobs": {
+      "title": "فرص العمل",
+      "subtitle": "اعثر على فرصتك المهنية القادمة",
+      "postJob": "أضف وظيفة",
+      "apply": "قدم الآن",
+      "fullTime": "دوام كامل",
+      "partTime": "دوام جزئي",
+      "contract": "عقد",
+      "freelance": "عمل حر"
+    },
+    "courses": {
+      "title": "الدورات التدريبية",
+      "subtitle": "التطوير المهني للمهندسين والحرفيين",
+      "enroll": "سجل الآن",
+      "lessons": "الدروس",
+      "duration": "المدة",
+      "certificate": "شهادة معتمدة"
+    },
+    "comparisons": {
+      "title": "المقارنات",
+      "subtitle": "قارن بين المواد والمعدات والحلول",
+      "compare": "قارن",
+      "features": "الميزات",
+      "price": "السعر",
+      "quality": "الجودة"
+    },
+    "calculator": {
+      "title": "حاسبة التكاليف",
+      "subtitle": "احسب تكاليف البناء الخاصة بك",
+      "area": "المساحة الإجمالية (م²)",
+      "floors": "عدد الطوابق",
+      "quality": "مستوى الجودة",
+      "calculate": "احسب التكلفة",
+      "result": "التكلفة المقدرة"
+    },
+    "market": {
+      "title": "السوق المفتوح",
+      "subtitle": "بيع واشترِ خدمات ومواد البناء",
+      "sell": "بيع منتج",
+      "buy": "شراء",
+      "services": "الخدمات",
+      "materials": "المواد",
+      "tools": "الأدوات"
+    },
+    "engineers": {
+      "title": "فضاء المهندسين",
+      "subtitle": "مجتمع خاص بالمهندسين",
+      "discussions": "النقاشات",
+      "resources": "الموارد",
+      "events": "الفعاليات",
+      "networking": "التواصل"
+    },
+    "videos": {
+      "title": "مكتبة الفيديو",
+      "subtitle": "فيديوهات تعليمية للبناء",
+      "trending": "الأكثر رواجاً",
+      "recent": "الأحدث",
+      "popular": "الأكثر شعبية",
+      "watchLater": "شاهد لاحقاً"
+    },
+    "prices": {
+      "title": "أسعار المنتجات",
+      "subtitle": "أسعار مواد البناء المحدثة",
+      "cement": "الإسمنت",
+      "steel": "الحديد",
+      "bricks": "الطوب",
+      "sand": "الرمل",
+      "gravel": "الحصى",
+      "lastUpdated": "آخر تحديث"
+    },
+    "request": {
+      "title": "طلب حرفي",
+      "subtitle": "اعثر على الحرفي المناسب لمشروعك",
+      "submit": "أرسل الطلب",
+      "description": "وصف المشروع",
+      "location": "الموقع",
+      "budget": "الميزانية",
+      "timeline": "الجدول الزمني"
+    },
+    "reviews": {
+      "title": "التقييمات والمراجعات",
+      "subtitle": "شاهد ما يقوله الآخرون",
+      "writeReview": "اكتب تقييماً",
+      "rating": "التقييم",
+      "verified": "تم التحقق من الشراء"
+    }
+  },
+  "common": {
+    "search": "بحث...",
+    "filter": "تصفية",
+    "sort": "ترتيب",
+    "viewAll": "عرض الكل",
+    "viewMore": "عرض المزيد",
+    "viewLess": "عرض أقل",
+    "loadMore": "تحميل المزيد",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "submit": "إرسال",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "close": "إغلاق",
+    "loading": "جاري التحميل...",
+    "noResults": "لا توجد نتائج",
+    "error": "حدث خطأ",
+    "success": "تمت العملية بنجاح",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "darkMode": "الوضع الداكن",
+    "lightMode": "الوضع الفاتح",
+    "currency": "د.ج"
+  },
+  "footer": {
+    "about": "من نحن",
+    "contact": "اتصل بنا",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة",
+    "faq": "الأسئلة الشائعة",
+    "support": "الدعم",
+    "copyright": "© 2024 DzBuild. جميع الحقوق محفوظة."
+  }
+}
