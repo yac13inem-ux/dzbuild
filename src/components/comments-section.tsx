@@ -42,7 +42,7 @@ export function CommentsSection({ itemType, itemId }: CommentsSectionProps) {
   const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [captcha, setCaptcha] = useState(generateCaptcha());
   const [captchaAnswer, setCaptchaAnswer] = useState('');
   
